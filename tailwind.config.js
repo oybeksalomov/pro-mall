@@ -44,7 +44,8 @@ export default {
             main_color: '#F00',
             white: '#fff',
             gray_light: '#cdcdcf',
-            gray_medium: '#A6A9B2'
+            gray_medium: '#A6A9B2',
+            gray_lightest: '#f6f6f6'
         },
         fontFamily: {
             inter: ["Inter", 'san-serif'],
