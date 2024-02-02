@@ -28,13 +28,13 @@
                 </div>
                 <!--end Desktop navbar-->
 
-                <!--start Navbar catalog-->
+                <!--start Under Navbar catalog-->
                 <div class="hidden lg:flex items-center justify-between ">
-                    <ul class="flex items-center gap-4 overflow-hidden justify-between flex-wrap h-[3.6rem]">
+                    <ul class="flex items-center gap-4 overflow-hidden justify-between flex-wrap h-[3.7rem]">
                         <li
                            v-for="(catalog, index) in catalogItems"
                            :key="index" 
-                           class="text-md cursor-pointer px-2 py-3 whitespace-nowrap"
+                           class="text-md after:content-[''] overflow-hidden after:backface-invisible after:left-0 after:opacity-0 hover:after:translate-x-0 hover:after:opacity-100 after:transition-all after:ease-in after:duration-[0.5s] after:absolute relative after:-translate-x-full after:bottom-0 after:h-[2px] after:w-full after:bg-main_color cursor-pointer px-2 py-3 whitespace-nowrap"
                         >{{catalog.label}}</li>
                     </ul>
 
@@ -48,7 +48,7 @@
                         <i class="pi pi-chevron-down text-main_color px-2"></i>
                     </button>
                 </div>
-                <!--end Navbar catalog-->
+                <!--end Under Navbar catalog-->
 
                 <!-- start Catalog -->
                 <div v-if="isCatalogOpen" class="absolute top-[8rem] bg-white lg:shadow-xl left-0 px-[1rem] w-full h-fit">
@@ -57,6 +57,7 @@
                             <li
                                 v-for="catalogItem in catalogItems"
                                 :key="catalogItem.id"
+                                @mouseenter="openCategory(catalogItem.id)"
                                 @click="openCategory(catalogItem.id)"
                                 class="hover:text-main_color lg:border-b-0 border-gray_light whitespace-nowrap text-ellipsis overflow-hidden cursor-pointer text-sm font-medium h-[4rem] flex justify-between items-center"
                                 :class="catalogItem.label === catalogItems[catalogItems.length - 1].label ? 'border-b-0' : 'border-b-[0.5px]'"
@@ -269,10 +270,14 @@ const backAllCatalog = () => {
     isCategoryOpen.value = false
     isCategoryItemsOpen.value = false
     selectedCategory.value = null
-
+}
+const test = () => {
+    console.log('mouse')
 }
 </script>
 
 <style scoped>
-
+.backface-invisible {
+    backface-visibility: hidden;
+}
 </style>
