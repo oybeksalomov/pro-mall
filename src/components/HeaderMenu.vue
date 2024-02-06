@@ -1,5 +1,5 @@
 <template>
-    <section class="relative">
+    <section class="relative z-50">
         <div class="container">
             <div class="lg:py-5">
 
