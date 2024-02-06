@@ -5,9 +5,10 @@
 
                 <!--start Desktop navbar-->
                 <div class="py-5 flex items-center justify-between gap-3">
-                    <span class="hidden lg:block flex-none"><img src="../assets/promall 1.svg" alt="Logo"></span>
+                    <router-link to="/" class="hidden lg:block flex-none"><img src="../assets/promall 1.svg" alt="Logo"></router-link>
                     <button @click="openCatalog" class="text-white bg-main_color py-3 px-6 rounded-full hidden lg:flex items-center">
-                        <i class="pi pi-align-justify text-base p-2"></i>
+                        <i v-if="!isCatalogOpen" class="pi pi-align-justify text-base p-2"></i>
+                        <i v-else class="pi pi-times text-base p-2"></i>
                         <span class="text-md font-medium">Каталог</span>
                     </button>
                     <span class="relative w-full">
@@ -18,10 +19,12 @@
                         <li 
                             v-for="navbarItem in navbarItems"
                             :key="navbarItem.name"
-                            class="flex flex-col text-sm px-1 items-center"
+                            class="text-sm px-1"
                         >
-                        <i :class="navbarItem.icon" class="text-base"></i>
-                        <span>{{navbarItem.label}}</span>
+                            <router-link class="flex flex-col items-center" :to="navbarItem.url">
+                                <i :class="navbarItem.icon" class="text-base"></i>
+                                <span>{{navbarItem.label}}</span>
+                            </router-link>
                         </li>
                         <div class="absolute text-white bg-main_color rounded-full p-0.5 min-w-8 right-6 -top-4 flex items-center justify-center ">2</div>
                     </ul>
@@ -29,7 +32,7 @@
                 <!--end Desktop navbar-->
 
                 <!--start Under Navbar catalog-->
-                <div class="hidden lg:flex items-center justify-between ">
+                <div class="hidden lg:flex items-center justify-between relative">
                     <ul class="flex items-center gap-4 overflow-hidden justify-between flex-wrap h-[3.7rem]">
                         <li
                            v-for="(catalog, index) in catalogItems"
@@ -43,10 +46,40 @@
                         <i class="pi pi-chevron-down px-2"></i>
                     </button>
 
-                    <button class="border text-sm px-2 py-3 flex items-center rounded-2xl bg-gray_lightest border-gray_light">
+                    <button @click="openAddressCard" class="border text-sm px-2 py-3 flex items-center rounded-2xl bg-gray_lightest border-gray_light">
                         <span class="whitespace-nowrap">Ташкент, Афросийоб 156</span>
                         <i class="pi pi-chevron-down text-main_color px-2"></i>
                     </button>
+
+                    <!--Address Card start-->
+                    <div v-if="isAddressCardOpen" class="absolute shadow-md p-8 bg-white rounded-[2rem] w-full max-w-[56rem] right-0 -bottom-4 translate-y-full">
+                        <div class="flex items-center">
+                            <button class="w-8 h-8 border mr-4 bg-gray_light"></button>
+                            <div class="text-3xl font-semibold">Адрес доставки</div>
+                            <button @click="closeAddressCard" class="ml-auto"><i class="pi pi-times"></i></button>
+                        </div>
+
+                        <div class="flex flex-col">
+                            <label
+                                v-for="(address, index) in selectAddress"
+                                :key="index"
+                                class="flex items-center py-8 text-base relative cursor-pointer"
+                                :class="index !== selectAddress.length-1 ? 'border-b border-gray_light' : ''"
+                            >
+                                <div v-if="selectedAddress === address.value" class="w-8 h-8 flex items-center justify-center rounded-full absolute bg-main_color border border-main_color">
+                                    <div class="w-4 h-4 rounded-full absolute bg-gray_lightest"></div>
+                                </div>
+                                <div v-else class="w-8 h-8 rounded-full absolute bg-gray_lightest border border-gray_light"></div>
+
+                                
+                                <input type="radio" :value="address.value" v-model="selectedAddress" class="appearance-none">
+                                
+                                <span class="ml-12">{{address.value}}</span>
+                                <div class="w-8 h-8 ml-auto border bg-gray_light"></div>
+                            </label>
+                        </div>
+                        <button class="text-base w-full rounded-[2rem] py-4 bg-gray_light">Добавить новый</button>
+                    </div>
                 </div>
                 <!--end Under Navbar catalog-->
 
@@ -175,18 +208,19 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 
 const isCatalogOpen = ref(false)
 const isCategoryOpen = ref(false)
 const isCategoryItemsOpen = ref(false)
+const isAddressCardOpen = ref(false)
 const selectedCatalog = ref(null)
 const selectedCategory = ref(null)
 const navbarItems = ref([
-    {label: 'Войти', icon: 'pi pi-user'},
-    {label: 'Заказы', icon: 'pi pi-shopping-bag'},
-    {label: 'Избранное', icon: 'pi pi-heart'},
-    {label: 'Корзина', icon: 'pi pi-shopping-cart', isCart: true},
+    {label: 'Войти', icon: 'pi pi-user', url: '/sign-in'},
+    {label: 'Заказы', icon: 'pi pi-shopping-bag', url: '#'},
+    {label: 'Избранное', icon: 'pi pi-heart', url: '/favorites'},
+    {label: 'Корзина', icon: 'pi pi-shopping-cart', isCart: true, url: '#'},
 ])
 const catalogItems = ref([
     {
@@ -241,6 +275,12 @@ const catalogItems = ref([
     {id: 11, label: 'Детские товары', icon: 'pi pi-box'},
     {id: 12, label: 'Хобби и творчество', icon: 'pi pi-apple'},
 ])
+const selectAddress = ref([
+    {value: 'Rishton ko\'cha 81', isSelected: true},
+    {value: 'Mirzo Ulug\'bek ko\'cha 102'}
+])
+
+const selectedAddress = ref()
 
 const openCatalog = () => {
     isCatalogOpen.value = !isCatalogOpen.value
@@ -271,9 +311,20 @@ const backAllCatalog = () => {
     isCategoryItemsOpen.value = false
     selectedCategory.value = null
 }
-const test = () => {
-    console.log('mouse')
+const openAddressCard = () => {
+    isAddressCardOpen.value = true
 }
+const closeAddressCard = () => {
+    isAddressCardOpen.value = false
+}
+
+onMounted(() => {
+    selectAddress.value.forEach(address => {
+        if(address.isSelected) {
+            selectedAddress.value = address.value
+        }
+    })
+})
 </script>
 
 <style scoped>
