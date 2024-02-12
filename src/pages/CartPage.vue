@@ -1,11 +1,11 @@
 <template>
     <div>
-        Savatga qo'shilgan mahs.lar Sahifasi
+        
     </div>
 </template>
 
 <script setup>
-
+import HeaderMenu from '../components/HeaderMenu.vue'
 </script>
 
 <style scoped>

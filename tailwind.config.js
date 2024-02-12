@@ -19,12 +19,15 @@ export default {
         },
         colors: {
             main_color: '#F00',
+            black: '#000',
+            black_font: '#222',
             white: '#fff',
             gray_light: '#cdcdcf',
             gray_medium: '#A6A9B2',
             gray_lightest: '#f6f6f6',
             gray_auth_bg: "#E8E8E8",
             gray_text: "#9AA1A7",
+            gray_icon: '#677178'
         },
         fontFamily: {
             inter: ["Inter", 'san-serif'],

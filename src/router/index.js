@@ -23,6 +23,16 @@ const router = createRouter({
                 {path: 'saved-items', component: () => import('../components/FavoriteSavedItems.vue')},
                 {path: 'the-shops', component: () => import('../components/FavoriteShops.vue')}
             ]
+        },
+        {
+            path: '/add-address',
+            name: 'add-address',
+            component:  () => import('../pages/AddAddressPage.vue')
+        },
+        {
+            path: '/cart',
+            name: 'cart',
+            component: () => import('../pages/CartPage.vue')
         }
     ]
 })

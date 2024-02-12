@@ -1,87 +1,63 @@
 <template>
-    <section class="relative z-50">
-        <div class="container">
-            <div class="lg:py-5">
-
+    <section class="fixed top-0 bg-white left-0 w-full z-50">
+        <div class="">
+            <div class="relative">
                 <!--start Desktop navbar-->
-                <div class="py-5 flex items-center justify-between gap-3">
-                    <router-link to="/" class="hidden lg:block flex-none"><img src="../assets/promall 1.svg" alt="Logo"></router-link>
-                    <button @click="openCatalog" class="text-white bg-main_color py-3 px-6 rounded-full hidden lg:flex items-center">
-                        <i v-if="!isCatalogOpen" class="pi pi-align-justify text-base p-2"></i>
-                        <i v-else class="pi pi-times text-base p-2"></i>
-                        <span class="text-md font-medium">Каталог</span>
-                    </button>
-                    <span class="relative w-full">
+                <div
+                    class="absolute container lg:hidden w-full bg-white top-0 left-0 z-30 transition-transform delay-75 duration-300"
+                    :class="[isScrollToBottom ? '-translate-y-full' : 'translate-y-[4.7rem]', {'border-b border-gray_lightest': isWindowScrolled}]"
+                >
+                    <div class="w-full lg:hidden my-4 flex items-center">
+                        <i class="pi pi-map-marker text-xl text-main_color mr-4"></i>
+                        <div class="">
+                            <div class="text-sm text-gray_medium">Адрес доставки</div>
+                            <div class="text-md flex items-center">
+                                <span class="mr-4">Rishton ko'chasi</span>
+                                <i class="pi pi-chevron-right text-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative w-full lg:hidden my-4">
                         <i class="pi pi-search text-xl absolute top-1/2 -translate-y-1/2 right-2 bg-main_color text-white rounded-full p-2.5" />
                         <input type="text" placeholder="Поиск" class="p-3 w-full px-5 border-2 outline-none focus:border-main_color border-main_color text-base rounded-full">
-                    </span>
-                    <ul class="hidden lg:flex max-w-[26.5rem] w-full justify-evenly relative">
-                        <li 
-                            v-for="navbarItem in navbarItems"
-                            :key="navbarItem.name"
-                            class="text-sm px-1"
-                        >
-                            <router-link class="flex flex-col items-center" :to="navbarItem.url">
-                                <i :class="navbarItem.icon" class="text-base"></i>
-                                <span>{{navbarItem.label}}</span>
-                            </router-link>
-                        </li>
-                        <div class="absolute text-white bg-main_color rounded-full p-0.5 min-w-8 right-6 -top-4 flex items-center justify-center ">2</div>
-                    </ul>
-                </div>
-                <!--end Desktop navbar-->
-
-                <!--start Under Navbar catalog-->
-                <div class="hidden lg:flex items-center justify-between relative">
-                    <ul class="flex items-center gap-4 overflow-hidden justify-between flex-wrap h-[3.7rem]">
-                        <li
-                           v-for="(catalog, index) in catalogItems"
-                           :key="index" 
-                           class="text-md after:content-[''] overflow-hidden after:backface-invisible after:left-0 after:opacity-0 hover:after:translate-x-0 hover:after:opacity-100 after:transition-all after:ease-in after:duration-[0.5s] after:absolute relative after:-translate-x-full after:bottom-0 after:h-[2px] after:w-full after:bg-main_color cursor-pointer px-2 py-3 whitespace-nowrap"
-                        >{{catalog.label}}</li>
-                    </ul>
-
-                    <button @click="openCatalog" class=" flex px-2 py-3 mx-3 items-center">
-                        <span class="text-md">Ещё</span>
-                        <i class="pi pi-chevron-down px-2"></i>
-                    </button>
-
-                    <button @click="openAddressCard" class="border text-sm px-2 py-3 flex items-center rounded-2xl bg-gray_lightest border-gray_light">
-                        <span class="whitespace-nowrap">Ташкент, Афросийоб 156</span>
-                        <i class="pi pi-chevron-down text-main_color px-2"></i>
-                    </button>
-
-                    <!--Address Card start-->
-                    <div v-if="isAddressCardOpen" class="absolute shadow-md p-8 bg-white rounded-[2rem] w-full max-w-[56rem] right-0 -bottom-4 translate-y-full">
-                        <div class="flex items-center">
-                            <button class="w-8 h-8 border mr-4 bg-gray_light"></button>
-                            <div class="text-3xl font-semibold">Адрес доставки</div>
-                            <button @click="closeAddressCard" class="ml-auto"><i class="pi pi-times"></i></button>
-                        </div>
-
-                        <div class="flex flex-col">
-                            <label
-                                v-for="(address, index) in selectAddress"
-                                :key="index"
-                                class="flex items-center py-8 text-base relative cursor-pointer"
-                                :class="index !== selectAddress.length-1 ? 'border-b border-gray_light' : ''"
-                            >
-                                <div v-if="selectedAddress === address.value" class="w-8 h-8 flex items-center justify-center rounded-full absolute bg-main_color border border-main_color">
-                                    <div class="w-4 h-4 rounded-full absolute bg-gray_lightest"></div>
-                                </div>
-                                <div v-else class="w-8 h-8 rounded-full absolute bg-gray_lightest border border-gray_light"></div>
-
-                                
-                                <input type="radio" :value="address.value" v-model="selectedAddress" class="appearance-none">
-                                
-                                <span class="ml-12">{{address.value}}</span>
-                                <div class="w-8 h-8 ml-auto border bg-gray_light"></div>
-                            </label>
-                        </div>
-                        <button class="text-base w-full rounded-[2rem] py-4 bg-gray_light">Добавить новый</button>
                     </div>
                 </div>
-                <!--end Under Navbar catalog-->
+
+                <div
+                    class="py-5 lg:py-8 absolute w-full left-0 bg-white z-40"
+                    :class="[{'border-b border-gray_lightest lg:border-none': isWindowScrolled && isScrollToBottom}, {'lg:shadow-md': isWindowScrolled}]"
+                >
+                    <div class="container flex items-center lg:justify-between gap-3">
+                        <button class="text-gray_icon lg:hidden mr-2">
+                            <i class="pi pi-align-justify text-xl"></i>
+                        </button>
+                        <router-link to="/" class="w-[10rem] lg:w-fit lg: flex-none"><img src="../assets/promall 1.svg" alt="Logo"></router-link>
+                        <button @click="openCatalog" class="text-white font-semibold bg-main_color py-3 px-6 rounded-full hidden lg:flex items-center">
+                            <i v-if="!isCatalogOpen" class="pi pi-align-justify text-base p-2"></i>
+                            <i v-else class="pi pi-times text-base p-2"></i>
+                            <span class="text-base">Каталог</span>
+                        </button>
+                        <span class="relative w-full hidden lg:block">
+                            <i class="pi pi-search text-xl absolute top-1/2 -translate-y-1/2 right-2 bg-main_color text-white rounded-full p-2.5" />
+                            <input type="text" placeholder="Поиск" class="p-3 w-full px-5 border-2 outline-none focus:border-main_color border-main_color text-base rounded-full">
+                        </span>
+                        <ul class="flex lg:max-w-[26.5rem] lg:w-full ml-auto lg:ml-0 justify-evenly relative">
+                            <li
+                                v-for="navbarItem in navbarItems"
+                                :key="navbarItem.name"
+                                class="text-sm px-1 mx-4 lg:mx-0"
+                                :class="navbarItem.isLogin ? 'hidden lg:block' : ''"
+                            >
+                                <router-link class="flex flex-col items-center text-gray_icon" :to="navbarItem.url">
+                                    <i :class="navbarItem.icon" class="text-xl"></i>
+                                    <span class="hidden text-md lg:block">{{navbarItem.label}}</span>
+                                </router-link>
+                            </li>
+                            <li class="absolute text-white bg-main_color rounded-full p-0.5 min-w-8 right-0 lg:right-6 -top-4 flex items-center justify-center ">2</li>
+                        </ul>
+                    </div>
+                </div>
+                <!--end Desktop navbar-->
 
                 <!-- start Catalog -->
                 <div v-if="isCatalogOpen" class="absolute top-[8rem] bg-white lg:shadow-xl left-0 px-[1rem] w-full h-fit">
@@ -187,46 +163,44 @@
             </div>
         </div>
 
-        <!--start Mobile navbar-->
-        <ul class="lg:hidden border-t-[0.5px] bg-white border-gray_light pt-3 fixed bottom-0 flex w-full justify-around">
-            <li @click="openCatalog" class="cursor-pointer flex flex-col text-[2.7vw] min-[578px]:text-md text-gray_medium px-1 items-center">
-                <i class="pi pi-align-justify text-xl min-[578px]:text-2xl text-gray_medium"></i>
-                <span>Каталог</span>
-            </li>
-            <li 
-                v-for="navbarItem in navbarItems"
-                :key="navbarItem.name"
-                class="flex flex-col relative min-w-[6rem] text-[2.7vw] min-[578px]:text-md text-gray_medium px-1 items-center"
-            >
-            <i :class="navbarItem.icon" class="text-xl min-[578px]:text-2xl text-gray_medium"></i>
-            <span>{{navbarItem.label}}</span>
-            <div v-if="navbarItem.isCart" class="absolute text-white bg-main_color rounded-full text-[0.8rem] min-[578px]:text-xs p-0.5 min-w-6 min-[578px]:min-w-8 right-4 min-[578px]:right-2 -top-2 flex items-center justify-center ">2</div>
-            </li>
-        </ul>
-        <!--end Mobile navbar-->
+<!--        &lt;!&ndash;start Mobile navbar&ndash;&gt;-->
+<!--        <ul class="lg:hidden border-t-[0.5px] bg-white border-gray_light pt-3 fixed bottom-0 flex w-full justify-around">-->
+<!--            <li @click="openCatalog" class="cursor-pointer flex flex-col text-[2.7vw] min-[578px]:text-md text-gray_medium px-1 items-center">-->
+<!--                <i class="pi pi-align-justify text-xl min-[578px]:text-2xl text-gray_medium"></i>-->
+<!--                <span>Каталог</span>-->
+<!--            </li>-->
+<!--            <li -->
+<!--                v-for="navbarItem in navbarItems"-->
+<!--                :key="navbarItem.name"-->
+<!--                class="flex flex-col relative min-w-[6rem] text-[2.7vw] min-[578px]:text-md text-gray_medium px-1 items-center"-->
+<!--            >-->
+<!--            <i :class="navbarItem.icon" class="text-xl min-[578px]:text-2xl text-gray_medium"></i>-->
+<!--            <span>{{navbarItem.label}}</span>-->
+<!--            <div v-if="navbarItem.isCart" class="absolute text-white bg-main_color rounded-full text-[0.8rem] min-[578px]:text-xs p-0.5 min-w-6 min-[578px]:min-w-8 right-4 min-[578px]:right-2 -top-2 flex items-center justify-center ">2</div>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--        &lt;!&ndash;end Mobile navbar&ndash;&gt;-->
     </section>
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import {onMounted, ref, watch} from "vue";
+import {useRouter} from "vue-router"
 
+const router = useRouter()
 const isCatalogOpen = ref(false)
 const isCategoryOpen = ref(false)
 const isCategoryItemsOpen = ref(false)
-const isAddressCardOpen = ref(false)
+const isWindowScrolled = ref(false)
+const isScrollToBottom = ref(false)
+const scrollValue = ref(0)
 const selectedCatalog = ref(null)
 const selectedCategory = ref(null)
-const navbarItems = ref([
-    {label: 'Войти', icon: 'pi pi-user', url: '/sign-in'},
-    {label: 'Заказы', icon: 'pi pi-shopping-bag', url: '#'},
-    {label: 'Избранное', icon: 'pi pi-heart', url: '/favorites'},
-    {label: 'Корзина', icon: 'pi pi-shopping-cart', isCart: true, url: '#'},
-])
 const catalogItems = ref([
     {
         id: 1,
-        label: 'Электроника', 
-        icon: 'pi pi-apple', 
+        label: 'Электроника',
+        icon: 'pi pi-apple',
         items: [
             {label: 'Смартфоны и телефоны', items: [{label: 'Аксессуары для смартфонов'}, {label: 'Смартфоны'}, {label: 'Кнопочные телефоны'}]},
             {label: 'Ноутбуки, планшеты и электронные книги', items: [{label: 'Аксессуары для смартфонов'}, {label: 'Смартфоны'}, {label: 'Кнопочные телефоны'}, {label: 'Электронные книги'}]},
@@ -241,7 +215,7 @@ const catalogItems = ref([
     },
     {
         id: 2,
-        label: 'Бытовая техника', 
+        label: 'Бытовая техника',
         icon: 'pi pi-car',
         items: [
             {label: 'Техника для красоты', items: [{label: 'Аксессуары для смартфонов'}, {label: 'Смартфоны'}, {label: 'Кнопочные телефоны'}]},
@@ -257,7 +231,7 @@ const catalogItems = ref([
     },
     {
         id: 3,
-        label: 'Одежда', 
+        label: 'Одежда',
         icon: 'pi pi-camera',
         items: [
             {label: 'Мужская одежда', items: [{label: 'Аксессуары для смартфонов'}, {label: 'Смартфоны'}, {label: 'Кнопочные телефоны'}]},
@@ -275,12 +249,13 @@ const catalogItems = ref([
     {id: 11, label: 'Детские товары', icon: 'pi pi-box'},
     {id: 12, label: 'Хобби и творчество', icon: 'pi pi-apple'},
 ])
-const selectAddress = ref([
-    {value: 'Rishton ko\'cha 81', isSelected: true},
-    {value: 'Mirzo Ulug\'bek ko\'cha 102'}
+const navbarItems = ref([
+    {label: 'Войти', icon: 'pi pi-user', url: '/sign-in', isLogin: true},
+    {label: 'Заказы', icon: 'pi pi-shopping-bag', url: '#'},
+    {label: 'Избранное', icon: 'pi pi-heart', url: '/favorites'},
+    {label: 'Корзина', icon: 'pi pi-shopping-cart', isCart: true, url: '/cart'},
 ])
 
-const selectedAddress = ref()
 
 const openCatalog = () => {
     isCatalogOpen.value = !isCatalogOpen.value
@@ -311,24 +286,27 @@ const backAllCatalog = () => {
     isCategoryItemsOpen.value = false
     selectedCategory.value = null
 }
-const openAddressCard = () => {
-    isAddressCardOpen.value = true
-}
-const closeAddressCard = () => {
-    isAddressCardOpen.value = false
+
+const handleScroll = () => {
+    isWindowScrolled.value = window.scrollY > 0;
+    scrollValue.value = window.scrollY
 }
 
 onMounted(() => {
-    selectAddress.value.forEach(address => {
-        if(address.isSelected) {
-            selectedAddress.value = address.value
-        }
-    })
+    window.addEventListener('scroll', handleScroll)
+
+    // selectAddress.value.forEach(address => {
+    //     if(address.isSelected) {
+    //         selectedAddress.value = address.value
+    //     }
+    // })
+})
+
+watch(scrollValue, (oldValue, newValue) => {
+    oldValue > newValue ? isScrollToBottom.value = true : isScrollToBottom.value = false
 })
 </script>
 
 <style scoped>
-.backface-invisible {
-    backface-visibility: hidden;
-}
+
 </style>
