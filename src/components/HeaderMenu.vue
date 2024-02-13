@@ -122,9 +122,9 @@
                                 </div>
                             </div>
 
-                            <li v-if="!isCategoryItemsOpen" class="text-sm pl-11 h-[4rem] flex items-center">
+                            <div v-if="!isCategoryItemsOpen" class="text-sm pl-11 h-[4rem] flex items-center">
                                 <span class="font-semibold whitespace-nowrap">Все товары категории </span>
-                            </li>
+                            </div>
 
                             <ul v-if="!isCategoryItemsOpen">
                                 <li

@@ -27,7 +27,8 @@ export default {
             gray_lightest: '#f6f6f6',
             gray_auth_bg: "#E8E8E8",
             gray_text: "#9AA1A7",
-            gray_icon: '#677178'
+            gray_icon: '#677178',
+            gray_subscribe: '#F2F5F7'
         },
         fontFamily: {
             inter: ["Inter", 'san-serif'],
