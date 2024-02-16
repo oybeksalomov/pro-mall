@@ -1,7 +1,7 @@
 <template>
     <!--start Under Navbar catalog-->
     <div class="lg:container">
-        <div class="flex items-center mt-[16rem] lg:mt-[9rem] justify-between relative">
+        <div class="flex items-center mt-[16rem] xl:mt-[9rem] justify-between relative">
             <ul class="flex ulScrollBar items-center px-4 lg:px-0 overflow-x-auto gap-4">
                 <li
                     v-for="(navItem, index) in underNavbarItems"
@@ -15,7 +15,7 @@
                 </li>
             </ul>
 
-            <button @click="openAddressCard" class="border hidden text-sm p-4 lg:flex items-center rounded-2xl bg-gray_lightest border-gray_light">
+            <button @click="openAddressCard" class="border hidden text-sm p-4 xl:flex items-center rounded-2xl bg-gray_lightest border-gray_light">
                 <span class="whitespace-nowrap">Ташкент, Афросийоб 156</span>
                 <i class="pi pi-chevron-down text-main_color px-2"></i>
             </button>

@@ -19,6 +19,7 @@ export default {
         },
         colors: {
             main_color: '#F00',
+            red_hover: '#FFE0E0',
             black: '#000',
             black_font: '#222',
             white: '#fff',
