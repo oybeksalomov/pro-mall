@@ -10,11 +10,6 @@ const router = createRouter({
             component: HomePage
         },
         {
-            path: '/sign-in',
-            name: 'sign-in',
-            component: () => import('../pages/SignInPage.vue')
-        },
-        {
             path: '/favorites',
             name: 'favorites',
             component: () => import('../pages/FavoritesPage.vue'),

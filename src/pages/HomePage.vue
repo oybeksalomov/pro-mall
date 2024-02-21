@@ -1,6 +1,8 @@
 <template>
-    <HeaderMenu></HeaderMenu>
-    <UnderNavbarMenu />
+    <HeaderMenu @open-add-address="toggleAddAddress" :is-add-address="isAddAddressOpen"/>
+    <UnderNavbarMenu @open-add-address="toggleAddAddress"/>
+
+    <AddAddress v-if="isAddAddressOpen" @close-add-address="toggleAddAddress"/>
 
     <!--start carousel-->
     <section class="mt-8">
@@ -33,7 +35,7 @@
         <div class="container">
             <div class="flex justify-between">
                 <h2 class="text-5xl font-bold">Торговые центры</h2>
-                <button class="text-xl font-medium">Увидеть все</button>
+                <button class="text-lg h-fit font-medium">Увидеть все</button>
             </div>
             <div class="mt-8 grid min-[640px]:grid-cols-2 lg:grid-cols-3 gap-8">
                 <ShoppingMallCard
@@ -52,7 +54,7 @@
         <div class="container">
             <div class="flex justify-between">
                 <h2 class="text-5xl font-bold">Топ скидки</h2>
-                <button class="text-xl font-medium">Увидеть все</button>
+                <button class="text-lg h-fit font-medium">Увидеть все</button>
             </div>
             <div class="relative">
                 <div ref="saleCardsRef" class="pt-8 snap-x snap-mandatory flex overflow-auto saleCardsScrollbar gap-8">
@@ -75,7 +77,7 @@
         <div class="container">
             <div class="flex justify-between">
                 <h2 class="text-5xl font-bold">Топ магазины</h2>
-                <button class="text-xl font-medium">Увидеть все</button>
+                <button class="text-lg h-fit font-medium">Увидеть все</button>
             </div>
             <div class="mt-8 grid grid-cols-2 min-[576px]:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-8">
                 <router-link
@@ -96,7 +98,7 @@
         <div class="container">
             <div class="flex justify-between">
                 <h2 class="text-5xl font-bold">Топ магазины</h2>
-                <button class="text-xl font-medium">Увидеть все</button>
+                <button class="text-lg h-fit font-medium">Увидеть все</button>
             </div>
             <div class="mt-8 grid grid-cols-2 min-[576px]:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-8">
                 <router-link
@@ -132,9 +134,21 @@
     <!--end Subscribe-->
 
     <!--start advertisement mobile app-->
-    <section class="mt-[5rem] bg-main_color">
+    <section class="mt-[10rem] bg-main_color">
         <div class="container">
-            <h3>Скачивайте приложение PRO MALL на свой смартфон</h3><!--todo advertisement pause-->
+            <div class="flex justify-start relative">
+                <div class="flex flex-col py-[5rem] xl:py-[7rem] justify-center px-[2rem] xl:pl-[5rem] max-w-[65rem]">
+                    <h3 class="text-[3.2rem] mb-[3rem] font-bold text-white">Скачивайте приложение PRO MALL на свой смартфон</h3>
+                    <div class="flex flex-col xl:flex-row gap-6">
+                        <img src="../assets/div.mobile-app-widget__qr-code%20(1).svg" class="w-[7.6rem]" alt="QR code">
+                        <img src="../assets/googleplay.739a9a.svg%20fill.svg" class="w-[20rem]" alt="GooglePlay">
+                        <img src="../assets/applestore.5f9da8.svg%20fill.svg" class="w-[20rem]" alt="AppleStore">
+                    </div>
+                </div>
+                <div class="hidden xl:block w-[63rem] absolute -right-[5rem] -bottom-[3px]">
+                    <img src="../assets/div.mobile-app-widget__picture.svg" class="w-full h-full" alt="Phone photo">
+                </div>
+            </div>
         </div>
     </section>
     <!--start advertisement mobile app-->
@@ -163,6 +177,7 @@ import brandImg1 from "../assets/image 19.svg"
 import brandImg2 from "../assets/image 18.svg"
 import brandImg3 from "../assets/image 20.svg"
 import brandImg4 from "../assets/image 21.svg"
+import AddAddress from "../components/AddAddress.vue";
 
 const carouselRef = ref(null)
 const saleCardsRef = ref(null)
@@ -220,6 +235,7 @@ const brands = ref([
     {img: brandImg3, url: '#'},
     {img: brandImg4, url: '#'},
 ])
+const isAddAddressOpen = ref(false)
 
 const moveCarousel = (direction) => {
     if(carouselRef.value) {
@@ -261,6 +277,11 @@ const moveSaleCards = (direction) => {
             behavior: 'smooth',
         });
     }
+}
+
+const toggleAddAddress = () => {
+    isAddAddressOpen.value = !isAddAddressOpen.value
+    document.body.style.overflow = isAddAddressOpen.value ? 'hidden' : 'auto'
 }
 
 onBeforeMount(() => {
