@@ -8,46 +8,46 @@
                     :key="index"
                     class="text-md relative cursor-pointer whitespace-nowrap"
                 >
-                    <router-link to="#" class="border text-sm p-4 flex items-center rounded-[1.4rem] bg-gray_lightest border-gray_light">
+                    <router-link to="#" class="border text-md p-4 flex items-center rounded-[1.4rem] bg-gray_lightest border-gray_light">
                         <i class="text-main_color text-lg pr-4" :class="navItem.icon"></i>
                         <span class="whitespace-nowrap">{{navItem.name}}</span>
                     </router-link>
                 </li>
             </ul>
 
-            <button @click="openAddressCard" class="border hidden text-sm p-4 xl:flex items-center rounded-2xl bg-gray_lightest border-gray_light">
-                <span class="whitespace-nowrap">Ташкент, Афросийоб 156</span>
-                <i class="pi pi-chevron-down text-main_color px-2"></i>
+            <button @click="toggleAddressCard" class="border hidden text-md p-4 xl:flex items-center rounded-2xl bg-gray_lightest border-gray_light">
+                <span class="whitespace-nowrap pr-2">{{selectAddress.length > 0 ? selectedAddress : 'Указать адрес'}}</span>
+                <i :class="{'rotate-180': isAddressCardOpen}" class="transition-transform pt-1 pi pi-chevron-down text-main_color px-2"></i>
             </button>
 
             <!--Address Card start-->
-            <div v-if="isAddressCardOpen" class="absolute z-30 shadow-md p-8 bg-white rounded-[2rem] w-full max-w-[56rem] right-0 -bottom-4 translate-y-full">
+            <div v-if="isAddressCardOpen" v-on-click-outside="toggleAddressCard" class="absolute z-30 addressCard p-8 bg-white rounded-[2rem] w-full max-w-[56rem] right-0 -bottom-4 translate-y-full">
                 <div class="flex items-center">
-                    <button class="w-8 h-8 border mr-4 bg-gray_light"></button>
+                    <i class="pi pi-home text-gray_text font-bold text-3xl mr-6"></i>
                     <div class="text-3xl font-semibold">Адрес доставки</div>
-                    <button @click="closeAddressCard" class="ml-auto"><i class="pi pi-times"></i></button>
+                    <button @click="toggleAddressCard" class="ml-auto"><i class="pi pi-times text-base text-gray_text font-bold"></i></button>
                 </div>
 
-                <div class="flex flex-col">
+                <div v-if="selectAddress.length > 0" class="flex flex-col">
                     <label
                         v-for="(address, index) in selectAddress"
                         :key="index"
                         class="flex items-center py-8 text-base relative cursor-pointer"
                         :class="index !== selectAddress.length-1 ? 'border-b border-gray_light' : ''"
                     >
-                                <span v-if="selectedAddress === address.value" class="w-8 h-8 flex items-center justify-center rounded-full absolute bg-main_color border border-main_color">
-                                    <span class="w-4 h-4 rounded-full absolute bg-gray_lightest"></span>
-                                </span>
+                        <span v-if="selectedAddress === address.value" class="w-8 h-8 flex items-center justify-center rounded-full absolute bg-main_color border border-main_color">
+                            <span class="w-4 h-4 rounded-full absolute bg-gray_lightest"></span>
+                        </span>
                         <span v-else class="w-8 h-8 rounded-full absolute bg-gray_lightest border border-gray_light"></span>
-
 
                         <input type="radio" :value="address.value" v-model="selectedAddress" class="appearance-none">
 
                         <span class="ml-12">{{address.value}}</span>
-                        <span class="w-8 h-8 ml-auto border bg-gray_light"></span>
+                        <button @click="removeAddress(index)" class="ml-auto"><i class="pi pi-trash text-lg text-gray_text"></i></button>
                     </label>
                 </div>
-                <button @click="pushToAddress" class="text-base w-full rounded-[2rem] py-4 bg-gray_light">Добавить новый</button>
+                <div v-else class="text-base py-8">Укажите ваш адрес</div>
+                <button @click="openAddAddress" class="text-base w-full rounded-[2rem] text-white py-4 bg-main_color">{{ selectAddress.length > 0 ? 'Добавить новый' : 'Указать адрес' }}</button>
             </div>
         </div>
     </div>
@@ -56,8 +56,9 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {onBeforeUnmount, onMounted, ref, watch} from "vue";
 import {useRouter} from "vue-router"
+import {vOnClickOutside} from "@vueuse/components";
 
 const isAddressCardOpen = ref(false)
 const router = useRouter()
@@ -73,19 +74,39 @@ const underNavbarItems = ref([
     {name: 'Мега Выгода', icon: 'pi pi-percentage'}
 ])
 
-const openAddressCard = () => {
-    isAddressCardOpen.value = true
+const emit = defineEmits(['openAddAddress'])
+const toggleAddressCard = () => {
+    isAddressCardOpen.value = !isAddressCardOpen.value
 }
-const closeAddressCard = () => {
-    isAddressCardOpen.value = false
+const openAddAddress = () => {
+    emit('openAddAddress')
 }
-const pushToAddress = () => {
-    router.push('/add-address')
+const removeAddress = (index) => {
+    selectAddress.value = selectAddress.value.filter(address => selectAddress.value[index] !== address)
 }
+const handleWindowResize = () => {
+    if (window.innerWidth < 1280) {
+        isAddressCardOpen.value = false
+    }
+}
+onMounted(() => {
+    window.addEventListener('resize', handleWindowResize)
+    selectAddress.value.forEach(address => {
+        if(address.isSelected) {
+            selectedAddress.value = address.value
+        }
+    })
+})
+onBeforeUnmount(() => {
+    window.removeEventListener('resize', handleWindowResize)
+})
 </script>
 
 <style scoped>
 .ulScrollBar {
     scrollbar-width: none;
+}
+.addressCard {
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px
 }
 </style>
