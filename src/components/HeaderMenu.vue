@@ -8,7 +8,7 @@
                 :class="[isScrollToBottom ? '-translate-y-full' : 'translate-y-[4.7rem]', {'border-b border-gray_lightest': isWindowScrolled}]"
             >
                 <div class="container">
-                    <div class="w-full xl:hidden my-4 flex items-center">
+                    <div v-if="isActiveAddress" class="w-full xl:hidden my-4 flex items-center">
                         <i class="pi pi-map-marker text-xl text-main_color mr-4"></i>
                         <div class="">
                             <div class="text-sm text-gray_medium">Адрес доставки</div>
@@ -390,9 +390,10 @@ const threeNestedItem = ref({})
 const oneIndex = ref(null)
 const twoIndex = ref(null)
 const threeIndex = ref(null)
+const isActiveAddress = ref(false)
 
 const emit = defineEmits(['openAddAddress'])
-const props = defineProps(['isAddAddress'])
+const props = defineProps(['isAddAddress', 'isShowAddress'])
 const toggleMenu = () => {
     isMenuOpen.value = !isMenuOpen.value
     oneNestedItem.value.isOpen = false
@@ -546,6 +547,7 @@ onMounted(() => {
             selectedAddress.value = address.value
         }
     })
+    isActiveAddress.value = props.isShowAddress
 })
 onBeforeUnmount(() => {
     window.removeEventListener('resize', handleWindowResize)

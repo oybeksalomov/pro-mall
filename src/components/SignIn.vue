@@ -8,7 +8,7 @@
             <button class="row-start-4 mt-auto w-full h-fit bg-main_color text-white text-sm font-bold p-4 rounded-full">Войти по PRO ID</button>
 
             <div class="flex mt-auto h-fit row-start-6">
-                <input type="checkbox">
+                <CheckBox />
                 <div class="text-gray_text pl-2">Men quyidagi hamma shartlarga roziman.</div>
             </div>
         </div>
@@ -17,6 +17,7 @@
 
 <script setup>
 import {vOnClickOutside} from "@vueuse/components";
+import CheckBox from "./CheckBox.vue";
 
 const closeSignIn = () => {
     emit("closeSignIn")

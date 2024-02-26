@@ -1,5 +1,5 @@
 <template>
-    <HeaderMenu @open-add-address="toggleAddAddress" :is-add-address="isAddAddressOpen"/>
+    <HeaderMenu :is-show-address="true" @open-add-address="toggleAddAddress" :is-add-address="isAddAddressOpen"/>
     <UnderNavbarMenu @open-add-address="toggleAddAddress"/>
 
     <AddAddress v-if="isAddAddressOpen" @close-add-address="toggleAddAddress"/>
@@ -35,7 +35,7 @@
         <div class="container">
             <div class="flex justify-between">
                 <h2 class="text-5xl font-bold">Торговые центры</h2>
-                <button class="text-lg h-fit font-medium">Увидеть все</button>
+                <button class="text-lg hidden xl:block h-fit font-medium">Увидеть все</button>
             </div>
             <div class="mt-8 grid min-[640px]:grid-cols-2 lg:grid-cols-3 gap-8">
                 <ShoppingMallCard
@@ -54,7 +54,7 @@
         <div class="container">
             <div class="flex justify-between">
                 <h2 class="text-5xl font-bold">Топ скидки</h2>
-                <button class="text-lg h-fit font-medium">Увидеть все</button>
+                <button class="text-lg hidden xl:block h-fit font-medium">Увидеть все</button>
             </div>
             <div class="relative">
                 <div ref="saleCardsRef" class="pt-8 snap-x snap-mandatory flex overflow-auto saleCardsScrollbar gap-8">
@@ -77,7 +77,7 @@
         <div class="container">
             <div class="flex justify-between">
                 <h2 class="text-5xl font-bold">Топ магазины</h2>
-                <button class="text-lg h-fit font-medium">Увидеть все</button>
+                <button class="text-lg hidden xl:block h-fit font-medium">Увидеть все</button>
             </div>
             <div class="mt-8 grid grid-cols-2 min-[576px]:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-8">
                 <router-link
@@ -98,7 +98,7 @@
         <div class="container">
             <div class="flex justify-between">
                 <h2 class="text-5xl font-bold">Топ магазины</h2>
-                <button class="text-lg h-fit font-medium">Увидеть все</button>
+                <button class="text-lg hidden xl:block h-fit font-medium">Увидеть все</button>
             </div>
             <div class="mt-8 grid grid-cols-2 min-[576px]:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-8">
                 <router-link
@@ -145,7 +145,7 @@
                         <img src="../assets/applestore.5f9da8.svg%20fill.svg" class="w-[20rem]" alt="AppleStore">
                     </div>
                 </div>
-                <div class="hidden xl:block w-[63rem] absolute -right-[5rem] -bottom-[3px]">
+                <div class="hidden xl:block w-[63rem] absolute -right-[5rem] -bottom-[4px]">
                     <img src="../assets/div.mobile-app-widget__picture.svg" class="w-full h-full" alt="Phone photo">
                 </div>
             </div>
