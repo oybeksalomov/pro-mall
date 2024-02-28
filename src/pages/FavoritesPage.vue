@@ -18,14 +18,15 @@
             <router-view></router-view>
         </div>
     </section>
-    <FooterComponent />
+    <FooterRow />
 </template>
 
 <script setup>
 import HeaderMenu from '../components/HeaderMenu.vue'
 import {onMounted, ref} from 'vue'
 import {useRouter} from 'vue-router'
-import FooterComponent from "../components/FooterComponent.vue";
+import FooterRow from "../components/FooterRow.vue";
+import UnderNavbarMenu from "../components/UnderNavbarMenu.vue";
 
 const router = useRouter()
 const navbarItems = ref([

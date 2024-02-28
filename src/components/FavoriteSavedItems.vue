@@ -7,7 +7,7 @@
     </div>
     <div class="flex">
         <div v-if="items.length > 0" class="py-12 hidden xl:block my-12 mr-8 w-[28rem]">
-            <FilterComponent/>
+            <FilterCol/>
         </div>
         <div class="xl:py-12 my-12 flex flex-col justify-center items-center text-xl">
             <div v-if="items.length > 0" class="grid grid-cols-2 min-[578px]:grid-cols-3 min-[768px]:grid-cols-4 xl:grid-cols-4 gap-4 xl:gap-8">
@@ -31,7 +31,7 @@
             <div class="text-lg font-bold">Фильтры</div>
         </div>
         <div class="mobileFilter overflow-y-auto">
-            <FilterComponent class="px-4 mt-6 overflow-hidden h-fit"/>
+            <FilterCol class="px-4 mt-6 overflow-hidden h-fit"/>
         </div>
         <div class="p-4 flex h-fit">
             <button class="row-start-4 h-fit w-full bg-main_color text-white text-base font-bold px-12 py-4 rounded-full">Показать все</button>
@@ -44,7 +44,7 @@
 import {useRouter} from "vue-router";
 import ItemComponent from "./ItemCard.vue";
 import itemImg11 from "../assets/sneakers.webp";
-import FilterComponent from "./FilterComponent.vue";
+import FilterCol from "./FilterCol.vue";
 import {onBeforeUnmount, onMounted, ref} from "vue";
 
 const router = useRouter()

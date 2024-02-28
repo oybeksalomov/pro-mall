@@ -1,7 +1,7 @@
 <template>
     <div class="w-full">
         <div class="relative w-full aspect-square flex items-center justify-center bg-gray_lightest rounded-[1.5rem]">
-            <router-link to="#" class="w-[90%]">
+            <router-link to="/item-info" class="w-[90%]">
                 <img class="w-full h-full object-cover object-center" src="../assets/sneakers.webp" alt="item photo">
             </router-link>
             <button @click="toggleFavorite" class="absolute top-6 right-6">
