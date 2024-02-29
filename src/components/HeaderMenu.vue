@@ -102,7 +102,7 @@
                                         >
                                             <div @click="openTwoNestedMenu(index)" class="pl-[5rem] cursor-pointer text-md">{{subItem.label}}</div>
                                             <transition name="nestedMenu">
-                                                <div v-show="subItem.isOpen" class="h-full max-h-[100vh] px-6 left-0 overflow-hidden absolute bg-white top-0 z-40 w-full py-6">
+                                                <div v-show="subItem.isOpen" class="h-full max-h-[100vh] px-6 left-0 overflow-hidden fixed bg-white top-0 z-40 w-full py-6">
                                                     <div class="flex items-start pb-8">
                                                         <button @click="backToMenu(index)" class="rounded-full flex-none mr-4 flex bg-white shadow-md items-center justify-center w-[3.2rem] h-[3.2rem]">
                                                             <i class="pi pi-chevron-left text-base text-main_color"></i>
@@ -574,36 +574,5 @@ watch(scrollValue, (oldValue, newValue) => {
 .desktopMenu {
     height: calc(100vh - 83px);
     scrollbar-width: none;
-}
-.headerMenu-enter-active,
-.headerMenu-leave-active,
-.sign-in-enter-active,
-.sign-in-leave-active {
-    transition: opacity 0.2s ease-in;
-}
-
-.headerMenu-enter-from,
-.headerMenu-leave-to,
-.sign-in-enter-from,
-.sign-in-leave-to {
-    opacity: 0;
-}
-.mobileMenu-enter-active,
-.mobileMenu-leave-active,
-.nestedMenu-leave-active {
-    transition: all 0.3s ease;
-}
-.mobileMenu-enter-from,
-.mobileMenu-leave-to,
-.nestedMenu-leave-to {
-    transform: translateX(-100%);
-}
-
-.nestedDesktopItems-enter-active {
-    transition: all 1s ease;
-}
-.nestedDesktopItems-enter-from {
-    opacity: 0;
-    transform: translateX(-2rem);
 }
 </style>

@@ -55,7 +55,7 @@
                 <!--         end   desktop image carousel-->
 
                 <div class="col-span-full xl:col-span-4 xl:row-start-1 mt-8 xl:mt-0">
-                    <div class="px-[3rem] max-w-[1024px] xl:px-0 xl:max-w-full">
+                    <div class="px-[1rem] max-w-[1024px] lg:px-0 lg:max-w-full">
                         <div>
                             <div class="text-lg font-semibold">Under Armour</div>
                             <div class="text-base mt-3">Спортивные кроссовки унисекс Under Armour 77-3025430 белые 8 US </div>
@@ -75,7 +75,7 @@
                 </div>
 
                 <div class="col-span-full xl:col-span-4 xl:row-span-full mt-8 xl:mt-0">
-                    <div class="px-[3rem] max-w-[1024px] xl:px-0 xl:max-w-full">
+                    <div class="px-[1rem] max-w-[1024px] lg:px-0 lg:max-w-full">
                         <div class="p-[1.6rem] rounded-[2.4rem]  paymentBox">
                             <div class="text-6xl font-semibold">449 999 сум</div>
                             <div class="flex text-md mt-4">
@@ -95,7 +95,7 @@
                 </div>
 
                 <div class="col-span-full xl:col-span-4 xl:col-start-5 xl:row-start-2 mt-8 xl:mt-0">
-                    <div class="px-[3rem] max-w-[1024px] xl:px-0 xl:max-w-full">
+                    <div class="px-[1rem] max-w-[1024px] lg:px-0 lg:max-w-full">
                         <div class="flex text-md mt-4">
                             <div class="text-gray_text">Материал верха:</div>
                             <div class="ml-4">текстиль</div>
@@ -107,6 +107,115 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="mt-8 xl:micon">
+        <div class="container">
+            <!-- start mobile full info about item-->
+            <ul class="xl:hidden">
+                <li @click="isDescriptionOpen = !isDescriptionOpen" class="cursor-pointer">
+                   <div class="py-3 flex justify-between items-center">
+                       <div class="text-3xl font-bold">Описание</div>
+                       <i :class="isDescriptionOpen ? 'pi-chevron-up' : 'pi-chevron-down'" class="pi text-gray_icon text-base"></i>
+                   </div>
+
+                   <div v-if="isDescriptionOpen" class="text-md py-3 mb-8">Легкие и гибкие. Много сетки для максимальной воздухопроницаемости. Charged Cushioning для превосходной амортизации и защиты от ударов.</div>
+                </li>
+                <li @click="isPriceOpen = !isPriceOpen" class="cursor-pointer">
+                    <div class="py-3 flex justify-between items-center">
+                        <div class="text-3xl font-bold">Цены {{availableShops.length}}</div>
+                        <i :class="isPriceOpen ? 'pi-chevron-up' : 'pi-chevron-down'" class="pi text-gray_icon text-base"></i>
+                    </div>
+
+                    <div v-if="isPriceOpen" class="py-3 text-lg">
+                        <ItemInfoPrices
+                            v-for="(shop, index) in availableShops"
+                            :key="index"
+                            :shop="shop"
+                            class="mt-6"
+                        />
+                    </div>
+                </li>
+                <li @click="isCharacteristicsOpen = !isCharacteristicsOpen" class="cursor-pointer">
+                    <div class="py-3 flex justify-between items-center">
+                        <div class="text-3xl font-bold">Характеристики</div>
+                        <i :class="isCharacteristicsOpen ? 'pi-chevron-up' : 'pi-chevron-down'" class="pi text-gray_icon text-base"></i>
+                    </div>
+
+                    <div v-if="isCharacteristicsOpen" class="py-3 mb-8">
+                        <ItemCharacteristicsList
+                            v-for="(characteristic, index) in characteristics"
+                            :key="index"
+                            :characteristic="characteristic"
+                        />
+                    </div>
+                </li>
+                <li @click="isReviewsOpen = !isReviewsOpen" class="cursor-pointer">
+                    <div class="py-3 flex justify-between items-center">
+                        <div class="text-3xl font-bold">Отзывы</div>
+                        <i :class="isReviewsOpen ? 'pi-chevron-up' : 'pi-chevron-down'" class="pi text-gray_icon text-base"></i>
+                    </div>
+
+                    <div v-if="isReviewsOpen" class="py-3 text-lg">
+                        Komentariyalar...
+                    </div>
+                </li>
+            </ul>
+            <!--end mobile full info about item-->
+
+            <!--start desktop full info item-->
+            <div class="hidden xl:block">
+                <div class="rounded-[2rem] desktopFullInfo p-6">
+                    <div class="flex">
+                        <template
+                            v-for="(infoItem, index) in infoList"
+                            :key="index"
+                            class="cursor-pointer"
+                        >
+                            <div
+                                class="text-base text-gray_icon cursor-pointer px-10 font-semibold"
+                                :class="{'text-main_color': infoItem.isOpen}"
+                                @click="selectInfo(index)"
+                            >{{infoItem.label}} {{infoItem.label === 'Цены' ? availableShops.length : ''}}</div>
+                            <hr v-if="(infoList.length - 1) !== index" class="border-r border-gray_icon h-[2.4rem]">
+                        </template>
+                    </div>
+                </div>
+
+                <div class="rounded-[2rem] mt-12 border-[0.5px] border-gray_lightest p-8">
+                    <div v-if="infoList[0].isOpen || infoList[3].isOpen">
+                        <div class="text-3xl font-bold">Популярные отзывы</div>
+                        <div class="text-md py-3 mb-8">Komentariyalar...</div>
+                    </div>
+                    <div v-if="infoList[0].isOpen">
+                        <div class="text-3xl font-bold">Описание</div>
+                        <div class="text-md py-3 mb-8">Легкие и гибкие. Много сетки для максимальной воздухопроницаемости. Charged Cushioning для превосходной амортизации и защиты от ударов.</div>
+                    </div>
+                    <div v-if="infoList[1].isOpen">
+                        <div class="text-3xl mb-8 font-bold">Цены</div>
+                        <ItemInfoPrices
+                            v-for="(shop, index) in availableShops"
+                            :key="index"
+                            :shop="shop"
+                            :class="{'xl:border-b': availableShops.length-1 !== index}"
+                        />
+                    </div>
+                    <div v-if="infoList[0].isOpen || infoList[2].isOpen">
+                        <div class="text-3xl font-bold">Характеристики</div>
+                        <div class="py-3 grid grid-cols-2 gap-x-[6rem]">
+                            <ItemCharacteristicsList
+                                v-for="(characteristic, index) in characteristics"
+                                :key="index"
+                                :characteristic="characteristic"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--start desktop full info item-->
+
         </div>
     </div>
 
@@ -123,6 +232,8 @@ import {onMounted, ref} from "vue";
 import image1 from "../assets/sneakers.webp"
 import image2 from "../assets/100058651944b2.webp"
 import image3 from "../assets/100058651944b1.webp"
+import ItemCharacteristicsList from "../components/ItemCharacteristicsList.vue";
+import ItemInfoPrices from "../components/ItemInfoPrices.vue";
 
 const images = ref([{img: image1}, {img: image2}, {img: image3}, ])
 const imagesRef = ref(null)
@@ -130,6 +241,63 @@ const activeImage = ref(0)
 const desktopImagesRef = ref(null)
 const isScrollable = ref(false)
 const selectedImage = ref(0)
+const characteristics = ref([
+        {
+            label: 'Заводские данные о товаре',
+            items: [
+                {label: 'Бренд', info: 'Under Armour'},
+                {label: 'Артикул производителя', info: '77-3025430'},
+                {label: 'Серия', info: '22'},
+                {label: 'Модель', info: 'UA W Charged Pursuit 3 Tech'},
+                {label: 'Код товара', info: '100058651941'}
+            ]
+        },
+        {
+            label: 'Основные характеристики',
+            items: [
+                {label: 'Страна-производитель', info: 'Вьетнам'},
+                {label: 'Артикул производителя', info: '77-3025430'},
+                {label: 'Серия', info: '22'},
+                {label: 'Модель', info: 'UA W Charged Pursuit 3 Tech'},
+                {label: 'Код товара', info: '100058651941'}
+            ]
+        },
+        {
+            label: 'Материалы и цвет',
+            items: [
+                {label: 'Материал верха', info: 'текстиль'},
+                {label: 'Артикул производителя', info: '77-3025430'},
+                {label: 'Серия', info: '22'},
+                {label: 'Модель', info: 'UA W Charged Pursuit 3 Tech'},
+                {label: 'Код товара', info: '100058651941'}
+            ]
+        }
+    ])
+const isDescriptionOpen = ref(false)
+const isCharacteristicsOpen = ref(false)
+const isReviewsOpen = ref(false)
+const isPriceOpen = ref(false)
+const infoList = ref([
+    {label: 'О товаре', isOpen: false},
+    {label: 'Цены', isOpen: false},
+    {label: 'Характеристики', isOpen: false},
+    {label: 'Отзывы', isOpen: false},
+])
+const availableShops = ref([
+    {
+        shop: 'ТЕХНОПАРК (доставка МегаМаркет)',
+        price: '460 000'
+    },
+    {
+        shop: 'Customtrade (доставка МегаМаркет)',
+        price: '500 000'
+    },
+    {
+        shop: 'ТЕХНОПАРК',
+        price: '439 000'
+    },
+])
+const infoListIndex = ref(0)
 
 const findActiveImage = () => {
     if (imagesRef.value.offsetWidth) {
@@ -160,10 +328,21 @@ const scrollImg = () => {
     findActiveImage()
 }
 
+const selectInfo = (index) => {
+    if(infoList.value) {
+        infoList.value[index].isOpen = true
+        if (infoListIndex.value !== index) {
+            infoList.value[infoListIndex.value].isOpen = false
+        }
+        infoListIndex.value = index
+    }
+}
+
 onMounted(() => {
     if (desktopImagesRef.value) {
         isScrollable.value = desktopImagesRef.value.scrollWidth > desktopImagesRef.value.offsetWidth
     }
+    selectInfo(0)
 })
 </script>
 
@@ -172,7 +351,8 @@ onMounted(() => {
 .desktopImagesContainer {
     scrollbar-width: none;
 }
-.paymentBox {
+.paymentBox,
+.desktopFullInfo {
     box-shadow: 0 8px 24px 0 #08090a14;
 }
 </style>
