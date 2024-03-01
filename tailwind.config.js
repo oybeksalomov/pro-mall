@@ -22,6 +22,7 @@ export default {
             red_hover: '#FFE0E0',
             black: '#000',
             black_font: '#222',
+            black_main: '#15181a',
             white: '#fff',
             gray_light: '#cdcdcf',
             gray_medium: '#A6A9B2',
