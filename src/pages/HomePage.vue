@@ -1,5 +1,5 @@
 <template>
-    <HeaderMenu @open-add-address="toggleAddAddress" :is-add-address="isAddAddressOpen"/>
+    <HeaderMenu :is-show-address="true" @open-add-address="toggleAddAddress" :is-add-address="isAddAddressOpen"/>
     <UnderNavbarMenu @open-add-address="toggleAddAddress"/>
 
     <AddAddress v-if="isAddAddressOpen" @close-add-address="toggleAddAddress"/>
@@ -35,7 +35,7 @@
         <div class="container">
             <div class="flex justify-between">
                 <h2 class="text-5xl font-bold">Торговые центры</h2>
-                <button class="text-lg h-fit font-medium">Увидеть все</button>
+                <button class="text-lg hidden xl:block h-fit font-medium">Увидеть все</button>
             </div>
             <div class="mt-8 grid min-[640px]:grid-cols-2 lg:grid-cols-3 gap-8">
                 <ShoppingMallCard
@@ -54,7 +54,7 @@
         <div class="container">
             <div class="flex justify-between">
                 <h2 class="text-5xl font-bold">Топ скидки</h2>
-                <button class="text-lg h-fit font-medium">Увидеть все</button>
+                <button class="text-lg hidden xl:block h-fit font-medium">Увидеть все</button>
             </div>
             <div class="relative">
                 <div ref="saleCardsRef" class="pt-8 snap-x snap-mandatory flex overflow-auto saleCardsScrollbar gap-8">
@@ -77,7 +77,7 @@
         <div class="container">
             <div class="flex justify-between">
                 <h2 class="text-5xl font-bold">Топ магазины</h2>
-                <button class="text-lg h-fit font-medium">Увидеть все</button>
+                <button class="text-lg hidden xl:block h-fit font-medium">Увидеть все</button>
             </div>
             <div class="mt-8 grid grid-cols-2 min-[576px]:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-8">
                 <router-link
@@ -98,7 +98,7 @@
         <div class="container">
             <div class="flex justify-between">
                 <h2 class="text-5xl font-bold">Топ магазины</h2>
-                <button class="text-lg h-fit font-medium">Увидеть все</button>
+                <button class="text-lg hidden xl:block h-fit font-medium">Увидеть все</button>
             </div>
             <div class="mt-8 grid grid-cols-2 min-[576px]:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-8">
                 <router-link
@@ -117,20 +117,7 @@
     <!--end Top Brands-->
 
     <!--start Subscribe-->
-    <section class="mt-20">
-        <div class="container">
-            <div class="rounded-[3.2rem] bg-gray_subscribe flex flex-col items-center py-12 px-8">
-                <h2 class="text-6xl font-semibold">Выгода с доставкой</h2>
-                <div class="text-base mt-8">Подпишитесь и получайте промокоды, акции и подборки товаров на свою почту.</div>
-                <div class="bg-white flex border border-gray_light items-center rounded-full mt-8 w-full max-w-[55rem]">
-                    <input type="email" placeholder="Введите e-mail" class="bg-white h-full px-[2.4rem] py-[1.6rem] outline-none rounded-full text-base w-full">
-                    <button class="text-base hidden lg:block px-[2.4rem] py-[1.2rem] font-semibold m-[0.4rem] rounded-full bg-main_color text-white">Подписаться</button>
-                </div>
-                <button class="text-base lg:hidden mr-auto min-[475px]:mr-0 mt-4 px-[2rem] py-[1.2rem] font-semibold m-[0.4rem] rounded-full bg-main_color text-white">Подписаться</button>
-                <div class="text-sm mt-8 lg:text-center lg:max-w-[55rem]">Нажимая «Подписаться» вы соглашаетесь с <span class="text-main_color">Условиями использования сайта</span> и <span class="text-main_color">Политикой обработки персональных данных.</span></div>
-            </div>
-        </div>
-    </section>
+    <SubscribeRow />
     <!--end Subscribe-->
 
     <!--start advertisement mobile app-->
@@ -145,7 +132,7 @@
                         <img src="../assets/applestore.5f9da8.svg%20fill.svg" class="w-[20rem]" alt="AppleStore">
                     </div>
                 </div>
-                <div class="hidden xl:block w-[63rem] absolute -right-[5rem] -bottom-[3px]">
+                <div class="hidden xl:block w-[63rem] absolute -right-[5rem] -bottom-[4px]">
                     <img src="../assets/div.mobile-app-widget__picture.svg" class="w-full h-full" alt="Phone photo">
                 </div>
             </div>
@@ -153,7 +140,7 @@
     </section>
     <!--start advertisement mobile app-->
 
-    <FooterComponent />
+    <FooterRow />
 </template>
 
 <script setup>
@@ -169,7 +156,7 @@ import mallImage1 from "../assets/samarqand_darvoza.jpg"
 import mallImage2 from "../assets/mega_planet.jpg"
 import mallImage3 from "../assets/atlas.jpeg"
 import saleImage from "../assets/Frame 48096434.svg"
-import FooterComponent from "../components/FooterComponent.vue";
+import FooterRow from "../components/FooterRow.vue";
 import shopImage1 from "../assets/terrapro.jpg"
 import shopImage2 from "../assets/just2010.jpeg"
 import shopImage3 from "../assets/xsport2010.jpg"
@@ -178,6 +165,7 @@ import brandImg2 from "../assets/image 18.svg"
 import brandImg3 from "../assets/image 20.svg"
 import brandImg4 from "../assets/image 21.svg"
 import AddAddress from "../components/AddAddress.vue";
+import SubscribeRow from "../components/SubscribeRow.vue";
 
 const carouselRef = ref(null)
 const saleCardsRef = ref(null)
