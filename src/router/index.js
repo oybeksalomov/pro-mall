@@ -39,6 +39,11 @@ const router = createRouter({
             name: 'catalog',
             component: () => import('../pages/CatalogPage.vue'),
             props: true
+        },
+        {
+            path: '/shopping-mall/:mallId',
+            name: 'mall',
+            component: () => import('../pages/ShoppingMallPage.vue'),
         }
     ]
 })

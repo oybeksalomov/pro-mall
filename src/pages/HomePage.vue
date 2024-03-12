@@ -42,6 +42,7 @@
                     v-for="(shoppingMall, index) in shoppingMalls"
                     :key="index"
                     :shoppingMall="shoppingMall"
+                    :mall-id="index"
                     class="w-full"
                 />
             </div>
