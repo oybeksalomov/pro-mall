@@ -6,7 +6,7 @@
         <div class="lg:container">
             <div class="grid grid-cols-12 xl:grid-rows-4 gap-x-8">
                 <!--         start   mobile image carousel-->
-                <div class="xl:hidden col-span-full">
+                <div class="xl:hidden relative  col-span-full">
                     <div ref="imagesRef" @scroll="scrollImg" class="flex flex-nowrap imagesContainer snap-x snap-mandatory overflow-auto w-fit h-[36rem]">
                         <div
                             v-for="(image, index) in images"
@@ -15,6 +15,7 @@
                         >
                             <img class="h-full mx-auto object-center object-contain" :src="image.img" alt="Item Photo">
                         </div>
+                        <BackTo class="absolute top-6 left-6" is-circle />
                     </div>
 
                     <div class="flex justify-center py-6">
@@ -234,6 +235,7 @@ import image2 from "../assets/100058651944b2.webp"
 import image3 from "../assets/100058651944b1.webp"
 import ItemCharacteristicsList from "../components/ItemCharacteristicsList.vue";
 import ItemInfoPrices from "../components/ItemInfoPrices.vue";
+import BackTo from "../components/BackTo.vue";
 
 const images = ref([{img: image1}, {img: image2}, {img: image3}, ])
 const imagesRef = ref(null)

@@ -33,7 +33,7 @@ export default {
             gray_subscribe: '#F2F5F7'
         },
         fontFamily: {
-            inter: ["Inter", 'san-serif'],
+            inter: ['Inter', 'sans-serif'],
         },
         fontSize: {
             xs: '1rem',

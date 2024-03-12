@@ -1,9 +1,6 @@
 <template>
     <div class="flex justify-end mt-12 xl:hidden">
-        <button @click="toggleFilter" class="flex items-center">
-            <span class="text-base">Фильтры</span>
-            <i class="pi pi-sliders-h text-lg ml-4"></i>
-        </button>
+        <FilterButton @click="toggleFilter" />
     </div>
     <div class="flex">
         <div v-if="items.length > 0" class="py-12 hidden xl:block my-12 mr-8 w-[28rem]">
@@ -25,7 +22,7 @@
             </div>
         </div>
     </div>
-    <div v-if="isFilterOpen" class="absolute z-50 xl:hidden h-screen w-full top-0 left-0 bg-white">
+    <div v-if="isFilterOpen" class="absolute z-50 flex flex-col xl:hidden h-dvh w-full top-0 left-0 bg-white">
         <div class="flex h-[4.5rem] items-center justify-center border-b border-gray_light px-4 relative">
             <button @click="toggleFilter"><i class="pi pi-times absolute top-1/2 -translate-y-1/2 left-6 font-bold text-lg text-gray_text"></i></button>
             <div class="text-lg font-bold">Фильтры</div>
@@ -46,6 +43,7 @@ import ItemComponent from "./ItemCard.vue";
 import itemImg11 from "../assets/sneakers.webp";
 import FilterCol from "./FilterCol.vue";
 import {onBeforeUnmount, onMounted, ref} from "vue";
+import FilterButton from "./FilterButton.vue";
 
 const router = useRouter()
 const isFilterOpen = ref(false)
@@ -130,7 +128,7 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .mobileFilter {
-    height: calc(100vh - 10.9rem);
+    max-height: calc(100vh - 10.9rem);
     scrollbar-width: none;
 }
 </style>

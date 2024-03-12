@@ -1,10 +1,11 @@
 <template>
     <div class="container">
-        <div>
+        <div class="pb-8 xl:pb-0">
             <div class="flex items-center justify-between py-6">
                 <router-link to="/" class="w-[10rem] xl:w-fit lg: flex-none"><img src="../assets/promall 1.svg" alt="Logo"></router-link>
                 <div class="text-base text-main_color font-semibold">Помощь покупателю</div>
             </div>
+            <BackTo class="xl:hidden mt-4" />
             <div class="text-3xl xl:text-[3.2rem] mt-8 font-bold">Корзина</div>
 
             <div v-if="cartItems.length > 0" class="xl:shadow-[0_8px_24px_0_#08090a14] xl:flex xl:p-10 xl:mt-10 xl:rounded-[2.5rem]">
@@ -45,6 +46,7 @@
 import CartItemCard from "../components/CartItemCard.vue";
 import {computed, onMounted, ref} from "vue";
 import itemImg11 from "../assets/sneakers.webp";
+import BackTo from "../components/BackTo.vue";
 
 const cartItems = ref([
     {

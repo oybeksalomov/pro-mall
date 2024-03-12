@@ -6,7 +6,7 @@
 
 </script>
 
-<style scoped>
+<style>
 .headerMenu-enter-active,
 .headerMenu-leave-active,
 .sign-in-enter-active,

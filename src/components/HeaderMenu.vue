@@ -72,7 +72,7 @@
 
             <!--Start Mobile menu-->
             <transition name="mobileMenu">
-                <div ref="mobileMenu" v-if="isMenuOpen" class="h-[100vh] mobileMenu overflow-auto px-6 absolute bg-white z-40 w-full py-6">
+                <div ref="mobileMenu" v-if="isMenuOpen" class="h-dvh mobileMenu overflow-y-auto px-6 absolute bg-white z-40 w-full py-6">
                     <div class="h-fit min-h-full">
                         <div class="flex justify-end">
                             <button @click="toggleMenu">
@@ -115,7 +115,7 @@
                                                         </div>
                                                         <button @click="closeTwoNestedMenu(index)" class="ml-auto"><i class="pi pi-times font-semibold text-gray_icon text-base"></i></button>
                                                     </div>
-                                                    <div class="nestedMenuHeader overflow-auto">
+                                                    <div class="nestedMenuHeader pb-6 overflow-auto">
                                                         <ul class="h-fit min-h-full">
                                                             <li
                                                                 v-for="(twoSubItem, index) in subItem.items"
@@ -136,7 +136,7 @@
                                                                             :key="index"
                                                                             class="whitespace-nowrap overflow-hidden text-ellipsis mb-8"
                                                                         >
-                                                                            <router-link to="#" class="pl-[5rem] cursor-pointer text-md">{{threeSubItem.label}}</router-link>
+                                                                            <button @click="pushToCatalog(threeSubItem.label)" class="pl-[5rem] cursor-pointer text-md">{{threeSubItem.label}}</button>
                                                                         </li>
                                                                     </ul>
                                                                 </transition>
@@ -210,10 +210,9 @@
                                                                                             <li
                                                                                                 v-for="(threeNestedItem, index) in twoNestedItem.items"
                                                                                                 :key="index"
+                                                                                                class="flex p-2 desktopMenuItem hover:bg-red_hover rounded-xl transition-all w-full items-center justify-start cursor-pointer mb-4"
                                                                                             >
-                                                                                                <div class="flex p-2 desktopMenuItem hover:bg-red_hover rounded-xl transition-all w-full items-center justify-start cursor-pointer mb-4">
-                                                                                                    <div class="text-md desktopMenuItemLabel">{{threeNestedItem.label}}</div>
-                                                                                                </div>
+                                                                                                <button @click="pushToCatalog(threeNestedItem.label)" class="text-md desktopMenuItemLabel">{{threeNestedItem.label}}</button>
                                                                                             </li>
                                                                                         </ul>
                                                                                     </div>
@@ -239,7 +238,7 @@
         </div>
 
         <!--Address Card start-->
-        <div v-if="isMobileAddressCardOpen" class="absolute xl:hidden flex w-full h-[100vh] z-50 top-0 left-0 bg-white bg-opacity-50">
+        <div v-if="isMobileAddressCardOpen" class="absolute xl:hidden flex w-full h-dvh z-50 top-0 left-0 bg-white bg-opacity-50">
             <div v-on-click-outside="toggleAddressCard" class="z-30 addressCard p-8 bg-white mt-auto rounded-t-[2rem] w-full">
                 <div class="flex items-center">
                     <i class="pi pi-home text-gray_text font-bold text-3xl mr-6"></i>
@@ -407,6 +406,16 @@ const toggleDesktopMenu = () => {
     oneIndex.value = null
     twoIndex.value = null
     threeIndex.value = null
+}
+
+const pushToCatalog = (category) => {
+    router.push(`/catalog/${category}`)
+    if (isDesktopMenuOpen.value) {
+        toggleDesktopMenu()
+    }
+    if(isMenuOpen.value) {
+        toggleMenu()
+    }
 }
 
 // desktop
