@@ -4,9 +4,19 @@
 
     <div class="mt-[13.1rem] xl:mt-[3rem]">
         <div class="lg:container">
-            <div class="grid grid-cols-12 xl:grid-rows-4 gap-x-8">
+            <ul class="flex gap-4 flex-row-reverse px-4 lg:px-0">
+                <li
+                    v-for="(btn, index) in topButtons"
+                    :key="index"
+                    class="text-gray_text cursor-pointer flex items-center"
+                >
+                    <i class="pi text-lg mr-2" :class="btn.icon"></i>
+                    <div class="text-md hidden lg:block">{{btn.label}}</div>
+                </li>
+            </ul>
+            <div class="grid grid-cols-12 gap-x-8 mt-8">
                 <!--         start   mobile image carousel-->
-                <div class="xl:hidden col-span-full">
+                <div class="xl:hidden relative  col-span-full">
                     <div ref="imagesRef" @scroll="scrollImg" class="flex flex-nowrap imagesContainer snap-x snap-mandatory overflow-auto w-fit h-[36rem]">
                         <div
                             v-for="(image, index) in images"
@@ -15,6 +25,7 @@
                         >
                             <img class="h-full mx-auto object-center object-contain" :src="image.img" alt="Item Photo">
                         </div>
+                        <BackTo class="absolute top-6 left-6" is-circle />
                     </div>
 
                     <div class="flex justify-center py-6">
@@ -71,39 +82,145 @@
                             <div class="text-md text-gray_text ml-4">14 отзывы</div>
                             <div class="text-md text-gray_text ml-4">152 продана</div>
                         </div>
+
+                        <div class="mt-6">
+                            <div class="text-md font-medium">Цвет товара: <span class="font-semibold">{{colors[colorIndex].color}}</span></div>
+                            <div class="flex gap-4 mt-4" >
+                                <button
+                                    @click="selectColor(index)"
+                                    v-for="(color, index) in colors"
+                                    :key="index"
+                                    class="w-[5.6rem] h-[5.6rem] bg-gray_lightest rounded-lg border"
+                                    :class="color.isSelected ? 'border-main_color' : 'border-gray_light'"
+                                >
+                                    <img class="flex-1 m-auto h-full rounded-lg object-contain" :src="color.img" alt="color">
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="max-w-[1024px] lg:px-0 lg:max-w-full mt-8">
+                            <div class="text-md font-medium">Коротко о товаре</div>
+                            <div class="flex text-md mt-4">
+                                <div class="text-gray_text">Материал верха:</div>
+                                <div class="ml-4">текстиль</div>
+                            </div>
+                            <div class="flex text-md ">
+                                <div class="text-gray_text">Длина стельки, см:</div>
+                                <div class="ml-4">23.5</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="col-span-full xl:col-span-4 xl:row-span-full mt-8 xl:mt-0">
+                <div class="col-span-full xl:col-span-4 xl:row-span-full mt-8 xl:mt-0 flex flex-col gap-4">
                     <div class="px-[1rem] max-w-[1024px] lg:px-0 lg:max-w-full">
-                        <div class="p-[1.6rem] rounded-[2.4rem]  paymentBox">
-                            <div class="text-6xl font-semibold">449 999 сум</div>
+                        <div class="p-[1.6rem] rounded-[2.4rem] bg-red100">
+                            <div class="flex items-start">
+                                <div class="text-4xl font-semibold flex flex-col text-main_color">
+                                    <span>449 000 сум</span>
+                                    <span class="text-base text-gray_text line-through">659 000 сум</span>
+                                </div>
+                                <div class="ml-auto px-4 py-4 rounded-lg rounded-tr-[2.4rem] bg-main_color text-white font-semibold text-md flex items-center justify-center leading-none">-15%</div>
+                            </div>
+
                             <div class="flex text-md mt-4">
-                                <div class="font-semibold mr-2">Доставка по клику</div>
-                                <div class="text-gray_text">с 3 марта</div>
-                                <div class="ml-auto">0 сум</div>
+                                <div class="font-medium leading-none text-gray_text mr-2">КешБек:</div>
+                                <div class="flex-1 border-b-2 border-dotted border-gray_light mx-1"></div>
+                                <div class="ml-auto leading-none whitespace-nowrap font-medium">56 000 сум</div>
                             </div>
                             <div class="flex text-md mt-4">
-                                <div class="font-semibold mr-2">Пункты выдачи</div>
-                                <div class="text-gray_text">с 3 марта</div>
-                                <div class="ml-auto">0 сум</div>
+                                <div class="font-medium leading-none whitespace-nowrap text-gray_text mr-2">Доставка по клику:</div>
+                                <div class=" leading-none whitespace-nowrap text-ellipsis overflow-hidden font-medium">с 3 марта</div>
+                                <div class="flex-1 border-b-2 border-dotted border-gray_light mx-1"></div>
+                                <div class="ml-auto leading-none whitespace-nowrap font-medium"> 18 000 сум</div>
                             </div>
-                            <div class="text-md text-gray_text mt-4">оплата только онлайн</div>
+                            <div class="flex text-md mt-4">
+                                <div class="font-medium leading-none whitespace-nowrap text-gray_text mr-2">Пункты выдачи:</div>
+                                <div class=" leading-none whitespace-nowrap text-ellipsis overflow-hidden font-medium">с 3 марта</div>
+                                <div class="flex-1 border-b-2 border-dotted border-gray_light mx-1"></div>
+                                <div class="ml-auto leading-none whitespace-nowrap font-medium">0 сум</div>
+                            </div>
+                            <div class="flex text-md mt-4">
+                                <div class="font-medium leading-none text-gray_text mr-2">Oплата:</div>
+                                <div class="flex-1 border-b-2 border-dotted border-gray_light mx-1"></div>
+                                <div class="ml-auto leading-none font-medium">наличными / онлайн.</div>
+                            </div>
                             <button class="w-full mt-6 h-fit bg-main_color text-white text-base font-bold px-12 py-3 rounded-full">Купить</button>
+                            <div class="flex text-md mt-4">
+                                <div class="font-medium leading-none text-gray_text mr-2">Продавец:</div>
+                                <div class="flex-1 border-b-2 border-dotted border-gray_light mx-1"></div>
+                                <router-link to="#" class="ml-auto leading-none font-medium text-main_color">OOO “BIG SHOP NAME”</router-link>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="col-span-full xl:col-span-4 xl:col-start-5 xl:row-start-2 mt-8 xl:mt-0">
-                    <div class="px-[1rem] max-w-[1024px] lg:px-0 lg:max-w-full">
-                        <div class="flex text-md mt-4">
-                            <div class="text-gray_text">Материал верха:</div>
-                            <div class="ml-4">текстиль</div>
+                        <div class="p-[1.6rem] rounded-[2.4rem] mt-6 bg-red100">
+                            <div class="font-medium text-md">Доступно для приобретения в рассрочку.</div>
+                            <div class="flex gap-4 mt-4">
+                                <div class="flex-1">
+                                    <div class="text-md">Срок рассрочки (мес.) </div>
+                                    <div class="flex rounded-full bg-white w-fit mt-2">
+                                        <button
+                                            v-for="(month, index) in creditMonths"
+                                            :key="index"
+                                            class="text-md px-6 py-4"
+                                            :class="{'rounded-full bg-main_color px-8 text-white': month.isSelected}"
+                                        >{{month.length}}</button>
+                                    </div>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="text-md">Ежемесячный платеж:</div>
+                                    <div class="flex mt-2 rounded-full bg-white p-4 text-md font-medium w-fit">33 000 сум</div>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-between items-end mt-6">
+                                <i class="pi pi-question-circle text-xl text-gray_text"></i>
+                                <button class="w-fit h-fit bg-main_color text-white text-base font-bold px-12 py-3 rounded-full">Оформить в рассрочку</button>
+                            </div>
                         </div>
-                        <div class="flex text-md mt-4">
-                            <div class="text-gray_text">Длина стельки, см:</div>
-                            <div class="ml-4">23.5</div>
+
+                        <div class="mt-6 text-base text-main_color text-center">Еще 27 предложений от 18 400 000 сум</div>
+
+                        <div class="flex flex-col gap-4 p-[1.6rem] rounded-[2.4rem] mt-6 bg-red100">
+                            <div class="border-b border-main_color pb-4">
+                                <div class="flex items-center justify-between">
+                                    <div class="text-2xl font-medium">439 000 сум</div>
+                                    <div class="bg-main_color text-sm rounded-full px-4 py-3 text-white font-semibold">-15%</div>
+                                    <div class="text-sm line-through font-medium text-gray_text">500 000 сум</div>
+                                </div>
+                                <div class="flex items-center justify-between mt-4">
+                                    <div class="flex flex-col gap-2">
+                                        <div class="text-md text-gray_text">Доставка: <span class="text-black">24 декабрь</span></div>
+                                        <div class="text-md text-gray_text">Забрать в магазине: <span class="text-black">24 декабрь</span></div>
+                                        <div class="text-md text-gray_text">Форма оплаты: <span class="text-black">наличными / онлайн.</span></div>
+                                        <div class="text-md text-gray_text">Продавец: <span class="text-main_color">OOO “BIG SHOP NAME”</span></div>
+                                    </div>
+                                    <button class="bg-main_color rounded-[1.4rem] p-4 h-fit">
+                                        <i class="pi pi-shopping-cart text-white text-[3.2rem]"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex items-center justify-between">
+                                    <div class="text-2xl font-medium">439 000 сум</div>
+                                    <div class="bg-main_color text-sm rounded-full px-4 py-3 text-white font-semibold">-15%</div>
+                                    <div class="text-sm line-through font-medium text-gray_text">500 000 сум</div>
+                                </div>
+                                <div class="flex items-center justify-between mt-4">
+                                    <div class="flex flex-col gap-2">
+                                        <div class="text-md text-gray_text">Доставка: <span class="text-black">24 декабрь</span></div>
+                                        <div class="text-md text-gray_text">Забрать в магазине: <span class="text-black">24 декабрь</span></div>
+                                        <div class="text-md text-gray_text">Форма оплаты: <span class="text-black">наличными / онлайн.</span></div>
+                                        <div class="text-md text-gray_text">Продавец: <span class="text-main_color">OOO “BIG SHOP NAME”</span></div>
+                                    </div>
+                                    <button class="bg-main_color rounded-[1.4rem] p-4 h-fit">
+                                        <i class="pi pi-shopping-cart text-white text-[3.2rem]"></i>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
+
+                        <button class=" text-base w-full text-main_color gap-4 p-[1.6rem] rounded-[2.4rem] mt-6 bg-red100">Смотреть все</button>
                     </div>
                 </div>
             </div>
@@ -234,6 +351,7 @@ import image2 from "../assets/100058651944b2.webp"
 import image3 from "../assets/100058651944b1.webp"
 import ItemCharacteristicsList from "../components/ItemCharacteristicsList.vue";
 import ItemInfoPrices from "../components/ItemInfoPrices.vue";
+import BackTo from "../components/BackTo.vue";
 
 const images = ref([{img: image1}, {img: image2}, {img: image3}, ])
 const imagesRef = ref(null)
@@ -283,6 +401,22 @@ const infoList = ref([
     {label: 'Характеристики', isOpen: false},
     {label: 'Отзывы', isOpen: false},
 ])
+const colors = ref([
+    {color: 'Oq', img: image1, isSelected: true},
+    {color: 'Qora', img: image1, isSelected: false},
+    {color: 'Qizil', img: image1, isSelected: false},
+])
+const creditMonths = ref([
+    {length: 3, isSelected: false},
+    {length: 6, isSelected: false},
+    {length: 9, isSelected: false},
+    {length: 12, isSelected: false},
+])
+const topButtons = ref([
+    {icon: 'pi-share-alt', label: 'Поделиться'},
+    {icon: 'pi-clone', label: 'Сравнить'},
+    {icon: 'pi-heart', label: 'В избранное'},
+])
 const availableShops = ref([
     {
         shop: 'ТЕХНОПАРК (доставка МегаМаркет)',
@@ -298,6 +432,7 @@ const availableShops = ref([
     },
 ])
 const infoListIndex = ref(0)
+const colorIndex = ref(0)
 
 const findActiveImage = () => {
     if (imagesRef.value.offsetWidth) {
@@ -338,6 +473,15 @@ const selectInfo = (index) => {
     }
 }
 
+const selectColor = (index) => {
+    if (colors.value) {
+        colors.value[index].isSelected = true
+        if (colorIndex.value !== index) {
+            colors.value[colorIndex.value].isSelected = false
+        }
+        colorIndex.value = index
+    }
+}
 onMounted(() => {
     if (desktopImagesRef.value) {
         isScrollable.value = desktopImagesRef.value.scrollWidth > desktopImagesRef.value.offsetWidth
@@ -351,7 +495,6 @@ onMounted(() => {
 .desktopImagesContainer {
     scrollbar-width: none;
 }
-.paymentBox,
 .desktopFullInfo {
     box-shadow: 0 8px 24px 0 #08090a14;
 }

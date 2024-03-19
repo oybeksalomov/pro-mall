@@ -20,6 +20,7 @@ export default {
         colors: {
             main_color: '#F00',
             red_hover: '#FFE0E0',
+            red100: '#FFF6F6',
             black: '#000',
             black_font: '#222',
             black_main: '#15181a',
@@ -33,7 +34,7 @@ export default {
             gray_subscribe: '#F2F5F7'
         },
         fontFamily: {
-            inter: ["Inter", 'san-serif'],
+            inter: ['Inter', 'sans-serif'],
         },
         fontSize: {
             xs: '1rem',

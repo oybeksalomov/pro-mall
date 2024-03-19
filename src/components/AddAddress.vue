@@ -1,9 +1,9 @@
 <template>
     <div class="fixed flex w-full h-[100%] xl:py-8 xl:justify-center z-50 top-0 left-0 bg-white bg-opacity-50">
-        <div v-on-click-outside="closeAddAddress" class="w-full h-full flex flex-col xl:max-w-[84rem] bg-white shadow-md xl:rounded-[2rem] p-8 ">
+        <div v-on-click-outside="addressStore.toggleAddAddress" class="w-full h-full flex flex-col xl:max-w-[84rem] bg-white shadow-md xl:rounded-[2rem] p-8 ">
             <div class="flex items-center">
                 <div class="font-semibold text-lg xl:text-3xl">Адрес доставки</div>
-                <button @click="closeAddAddress" class="ml-auto"><i class="pi pi-times text-md xl:text-base text-gray_text font-bold"></i></button>
+                <button @click="addressStore.toggleAddAddress" class="ml-auto"><i class="pi pi-times text-md xl:text-base text-gray_text font-bold"></i></button>
             </div>
 
             <div class="flex mt-12">
@@ -22,11 +22,9 @@
 
 <script setup>
 import {vOnClickOutside} from "@vueuse/components";
+import {useAddressStore} from "../store/address.js";
 
-const emit = defineEmits(['closeAddAddress'])
-const closeAddAddress = () => {
-    emit('closeAddAddress')
-}
+const addressStore = useAddressStore()
 </script>
 
 <style scoped>

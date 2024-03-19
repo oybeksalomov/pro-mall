@@ -1,8 +1,8 @@
 <template>
-    <HeaderMenu :is-show-address="true" @open-add-address="toggleAddAddress" :is-add-address="isAddAddressOpen"/>
-    <UnderNavbarMenu @open-add-address="toggleAddAddress"/>
+    <HeaderMenu :is-show-address="true" @open-add-address="toggleAddAddress"/>
+    <UnderNavbarMenu />
 
-    <AddAddress v-if="isAddAddressOpen" @close-add-address="toggleAddAddress"/>
+    <AddAddress v-if="isAddAddressOpen"/>
 
     <!--start carousel-->
     <section class="mt-8">
@@ -42,6 +42,7 @@
                     v-for="(shoppingMall, index) in shoppingMalls"
                     :key="index"
                     :shoppingMall="shoppingMall"
+                    :mall-id="index"
                     class="w-full"
                 />
             </div>
@@ -166,6 +167,11 @@ import brandImg3 from "../assets/image 20.svg"
 import brandImg4 from "../assets/image 21.svg"
 import AddAddress from "../components/AddAddress.vue";
 import SubscribeRow from "../components/SubscribeRow.vue";
+import {useAddressStore} from "../store/address.js";
+import {storeToRefs} from "pinia";
+
+const addressStore = useAddressStore()
+const {addresses, isAddAddressOpen} = storeToRefs(addressStore)
 
 const carouselRef = ref(null)
 const saleCardsRef = ref(null)
@@ -223,7 +229,6 @@ const brands = ref([
     {img: brandImg3, url: '#'},
     {img: brandImg4, url: '#'},
 ])
-const isAddAddressOpen = ref(false)
 
 const moveCarousel = (direction) => {
     if(carouselRef.value) {
@@ -268,8 +273,8 @@ const moveSaleCards = (direction) => {
 }
 
 const toggleAddAddress = () => {
-    isAddAddressOpen.value = !isAddAddressOpen.value
-    document.body.style.overflow = isAddAddressOpen.value ? 'hidden' : 'auto'
+    addressStore.toggleAddAddress()
+    document.body.style.overflow = isAddAddressOpen ? 'hidden' : 'auto'
 }
 
 onBeforeMount(() => {

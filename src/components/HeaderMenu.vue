@@ -72,7 +72,7 @@
 
             <!--Start Mobile menu-->
             <transition name="mobileMenu">
-                <div ref="mobileMenu" v-if="isMenuOpen" class="h-[100vh] mobileMenu overflow-auto px-6 absolute bg-white z-40 w-full py-6">
+                <div ref="mobileMenu" v-if="isMenuOpen" class="h-dvh mobileMenu overflow-y-auto px-6 absolute bg-white z-40 w-full py-6">
                     <div class="h-fit min-h-full">
                         <div class="flex justify-end">
                             <button @click="toggleMenu">
@@ -115,7 +115,7 @@
                                                         </div>
                                                         <button @click="closeTwoNestedMenu(index)" class="ml-auto"><i class="pi pi-times font-semibold text-gray_icon text-base"></i></button>
                                                     </div>
-                                                    <div class="nestedMenuHeader overflow-auto">
+                                                    <div class="nestedMenuHeader pb-6 overflow-auto">
                                                         <ul class="h-fit min-h-full">
                                                             <li
                                                                 v-for="(twoSubItem, index) in subItem.items"
@@ -136,7 +136,7 @@
                                                                             :key="index"
                                                                             class="whitespace-nowrap overflow-hidden text-ellipsis mb-8"
                                                                         >
-                                                                            <router-link to="#" class="pl-[5rem] cursor-pointer text-md">{{threeSubItem.label}}</router-link>
+                                                                            <button @click="pushToCatalog(threeSubItem.label)" class="pl-[5rem] cursor-pointer text-md">{{threeSubItem.label}}</button>
                                                                         </li>
                                                                     </ul>
                                                                 </transition>
@@ -210,10 +210,9 @@
                                                                                             <li
                                                                                                 v-for="(threeNestedItem, index) in twoNestedItem.items"
                                                                                                 :key="index"
+                                                                                                class="flex p-2 desktopMenuItem hover:bg-red_hover rounded-xl transition-all w-full items-center justify-start cursor-pointer mb-4"
                                                                                             >
-                                                                                                <div class="flex p-2 desktopMenuItem hover:bg-red_hover rounded-xl transition-all w-full items-center justify-start cursor-pointer mb-4">
-                                                                                                    <div class="text-md desktopMenuItemLabel">{{threeNestedItem.label}}</div>
-                                                                                                </div>
+                                                                                                <button @click="pushToCatalog(threeNestedItem.label)" class="text-md desktopMenuItemLabel">{{threeNestedItem.label}}</button>
                                                                                             </li>
                                                                                         </ul>
                                                                                     </div>
@@ -239,7 +238,7 @@
         </div>
 
         <!--Address Card start-->
-        <div v-if="isMobileAddressCardOpen" class="absolute xl:hidden flex w-full h-[100vh] z-50 top-0 left-0 bg-white bg-opacity-50">
+        <div v-if="isMobileAddressCardOpen" class="absolute xl:hidden flex w-full h-dvh z-50 top-0 left-0 bg-white bg-opacity-50">
             <div v-on-click-outside="toggleAddressCard" class="z-30 addressCard p-8 bg-white mt-auto rounded-t-[2rem] w-full">
                 <div class="flex items-center">
                     <i class="pi pi-home text-gray_text font-bold text-3xl mr-6"></i>
@@ -247,12 +246,12 @@
                     <button @click="toggleAddressCard" class="ml-auto"><i class="pi pi-times text-base text-gray_text font-bold"></i></button>
                 </div>
 
-                <div v-if="selectAddress.length > 0" class="flex flex-col">
+                <div v-if="addresses.length > 0" class="flex flex-col">
                     <label
-                        v-for="(address, index) in selectAddress"
+                        v-for="(address, index) in addresses"
                         :key="index"
                         class="flex items-center py-8 text-base relative cursor-pointer"
-                        :class="index !== selectAddress.length-1 ? 'border-b border-gray_light' : ''"
+                        :class="index !== addresses.length-1 ? 'border-b border-gray_light' : ''"
                     >
                     <span v-if="selectedAddress === address.value" class="w-8 h-8 flex items-center justify-center rounded-full absolute bg-main_color border border-main_color">
                         <span class="w-4 h-4 rounded-full absolute bg-gray_lightest"></span>
@@ -262,11 +261,11 @@
                         <input type="radio" :value="address.value" v-model="selectedAddress" class="appearance-none">
 
                         <span class="ml-12">{{address.value}}</span>
-                        <button @click="removeAddress(index)" class="ml-auto"><i class="pi pi-trash text-lg text-gray_text"></i></button>
+                        <button @click="addressStore.removeAddress(address.id)" class="ml-auto"><i class="pi pi-trash text-lg text-gray_text"></i></button>
                     </label>
                 </div>
                 <div v-else class="text-base py-8">Укажите ваш адрес</div>
-                <button @click="openAddAddress" class="text-base w-full rounded-[2rem] text-white py-4 bg-main_color">{{ selectAddress.length > 0 ? 'Добавить новый' : 'Указать адрес' }}</button>
+                <button @click="addressStore.toggleAddAddress" class="text-base w-full rounded-[2rem] text-white py-4 bg-main_color">{{ addresses.length > 0 ? 'Добавить новый' : 'Указать адрес' }}</button>
             </div>
         </div>
 
@@ -281,6 +280,15 @@ import {onBeforeUnmount, onMounted, ref, watch} from "vue";
 import {useRouter} from "vue-router"
 import {vOnClickOutside} from "@vueuse/components";
 import SignIn from "./SignIn.vue";
+import {useCategoryStore} from "../store/category.js";
+import {storeToRefs} from "pinia";
+import {useAddressStore} from "../store/address.js";
+
+const categoryStore = useCategoryStore()
+const addressStore = useAddressStore()
+
+const { menuItems } = storeToRefs(categoryStore)
+const {addresses, isAddAddressOpen} = storeToRefs(addressStore)
 
 const router = useRouter()
 const mobileMenu = ref(null)
@@ -289,101 +297,15 @@ const isSignInOpen = ref(false)
 const isDesktopMenuOpen = ref(false)
 const isWindowScrolled = ref(false)
 const isScrollToBottom = ref(false)
+const isMobileAddressCardOpen = ref(false)
 const scrollValue = ref(0)
-const menuItems = ref([
-    {
-        id: 1,
-        label: 'Электроника',
-        icon: 'pi pi-apple', isOpen: false,
-        items: [
-            {
-                label: 'Смартфоны и телефоны',
-                isOpen: false,
-                items: [
-                    {
-                        label: 'Аксессуары для смартфонов',
-                        icon: 'pi pi-apple',
-                        isOpen: false,
-                        items: [
-                            {label: 'Фильтр 1'},
-                            {label: 'Фильтр 2'}
-                        ]
-                    },
-                    {label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]},
-                    {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]},
-                    {label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]},
-                    {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]},{label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]},
-                    {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]},{label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]},
-                    {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]},{label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]},
-                    {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]},{label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]},
-                    {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]},{label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]},
-                    {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]},{label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]},
-                    {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]},{label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]},
-                    {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]},{label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]},
-                    {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]},{label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]},
-                    {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]},{label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]},
-                    {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]},{label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]},
-                    {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]},{label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]},
-                    {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}
-                ]
-            },
-            {label: 'Ноутбуки, планшеты и электронные книги', isOpen: false, items: [{label: 'Аксессуары для смартфонов', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Электронные книги', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}]},
-            {label: 'Умные часы и фитнес браслеты', isOpen: false, items: [{label: 'Аксессуары для смартфонов', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Электронные книги', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}]},
-            {label: 'Наушники и аудиотехника', isOpen: false, items: [{label: 'Аксессуары для смартфонов', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Электронные книги', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}]},
-            {label: 'Часы и электронные будильники', isOpen: false, items: [{label: 'Аксессуары для смартфонов', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Электронные книги', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}]},
-            {label: 'Телевизоры и видеотехника', isOpen: false, items: [{label: 'Аксессуары для смартфонов', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Электронные книги', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}]},
-            {label: 'Игровые приставки', isOpen: false, items: [{label: 'Аксессуары для смартфонов', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Электронные книги', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}]},
-            {label: 'Ноутбуки, планшеты и электронные книги', isOpen: false, items: [{label: 'Аксессуары для смартфонов', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Электронные книги', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}]},
-            {label: 'Оптические приборы', isOpen: false, items: [{label: 'Аксессуары для смартфонов', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Электронные книги', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}]},
-        ]
-    },
-    {
-        id: 2,
-        label: 'Бытовая техника',
-        icon: 'pi pi-car', isOpen: false,
-        items: [
-            {label: 'Техника для красоты', isOpen: false, items: [{label: 'Аксессуары для смартфонов', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}]},
-            {label: 'Крупная бытовая техника', isOpen: false, items: [{label: 'Аксессуары для смартфонов', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Электронные книги', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}]},
-            {label: 'Умные часы и фитнес браслеты', isOpen: false, items: [{label: 'Аксессуары для смартфонов', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Электронные книги', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}]},
-            {label: 'Наушники и аудиотехника', isOpen: false, items: [{label: 'Аксессуары для смартфонов', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Электронные книги', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}]},
-            {label: 'Часы и электронные будильники', isOpen: false, items: [{label: 'Аксессуары для смартфонов', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Электронные книги', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}]},
-            {label: 'Телевизоры и видеотехника', isOpen: false, items: [{label: 'Аксессуары для смартфонов', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Электронные книги', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}]},
-            {label: 'Игровые приставки', isOpen: false, items: [{label: 'Аксессуары для смартфонов', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Электронные книги', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}]},
-            {label: 'Ноутбуки, планшеты и электронные книги', isOpen: false, items: [{label: 'Аксессуары для смартфонов', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Электронные книги', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}]},
-            {label: 'Оптические приборы', isOpen: false, items: [{label: 'Аксессуары для смартфонов', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Электронные книги', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}]},
-        ]
-    },
-    {
-        id: 3,
-        label: 'Одежда',
-        icon: 'pi pi-camera', isOpen: false,
-        items: [
-            {label: 'Мужская одежда', isOpen: false, items: [{label: 'Аксессуары для смартфонов', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}]},
-            {label: 'Женская одежда', isOpen: false, items: [{label: 'Аксессуары для смартфонов', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Электронные книги', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}]},
-            {label: 'Детская одежда', isOpen: false, items: [{label: 'Аксессуары для смартфонов', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Смартфоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Кнопочные телефоны', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}, {label: 'Электронные книги', icon: 'pi pi-apple', isOpen: false, items: [{label: 'Фильтр 1'}, {label: 'Фильтр 2'}]}]},
-        ]
-    },
-    {id: 4, label: 'Обувь', isOpen: false, icon: 'pi pi-box'},
-    {id: 5, label: 'Аксессуары', isOpen: false, icon: 'pi pi-box'},
-    {id: 6, label: 'Красота и уход', isOpen: false, icon: 'pi pi-apple'},
-    {id: 7, label: 'Здоровье', isOpen: false, icon: 'pi pi-box'},
-    {id: 8, label: 'Товары для дома', isOpen: false, icon: 'pi pi-apple'},
-    {id: 9, label: 'Строительство и ремонт', isOpen: false, icon: 'pi pi-box'},
-    {id: 10, label: 'Автотовары', isOpen: false, icon: 'pi pi-box'},
-    {id: 11, label: 'Детские товары', isOpen: false, icon: 'pi pi-box'},
-    {id: 12, label: 'Хобби и творчество', isOpen: false, icon: 'pi pi-apple'},
-])
 const navbarItems = ref([
     {label: 'Заказы', icon: 'pi pi-shopping-bag', url: '#'},
     {label: 'Избранное', icon: 'pi pi-heart', url: '/favorites'},
     {label: 'Корзина', icon: 'pi pi-shopping-cart', isCart: true, url: '/cart'},
 ])
-const isMobileAddressCardOpen = ref(false)
 const selectedAddress = ref()
-const selectAddress = ref([
-    {value: 'Rishton ko\'cha 81', isSelected: true},
-    {value: 'Mirzo Ulug\'bek ko\'cha 102'}
-])
+
 const oneNestedItem = ref({})
 const twoNestedItem = ref({})
 const threeNestedItem = ref({})
@@ -392,8 +314,7 @@ const twoIndex = ref(null)
 const threeIndex = ref(null)
 const isActiveAddress = ref(false)
 
-const emit = defineEmits(['openAddAddress'])
-const props = defineProps(['isAddAddress', 'isShowAddress'])
+const props = defineProps([ 'isShowAddress'])
 const toggleMenu = () => {
     isMenuOpen.value = !isMenuOpen.value
     oneNestedItem.value.isOpen = false
@@ -407,6 +328,16 @@ const toggleDesktopMenu = () => {
     oneIndex.value = null
     twoIndex.value = null
     threeIndex.value = null
+}
+
+const pushToCatalog = (category) => {
+    router.push(`/catalog/${category}`)
+    if (isDesktopMenuOpen.value) {
+        toggleDesktopMenu()
+    }
+    if(isMenuOpen.value) {
+        toggleMenu()
+    }
 }
 
 // desktop
@@ -508,14 +439,13 @@ const toggleSignIn = () => {
     isSignInOpen.value = !isSignInOpen.value
     document.body.style.overflow = !isSignInOpen.value ? 'auto' : 'hidden'
 }
-
 const giveBodyStyle = () => {
     document.body.style.overflow =
         !isMenuOpen.value &&
         !isDesktopMenuOpen.value &&
         !isSignInOpen.value &&
         !isMobileAddressCardOpen.value &&
-        !props.isAddAddress ?
+        !isAddAddressOpen.value ?
             'auto' : 'hidden'
 }
 const handleWindowResize = () => {
@@ -532,17 +462,11 @@ const toggleAddressCard = () => {
     isMobileAddressCardOpen.value = !isMobileAddressCardOpen.value
     document.body.style.overflow = !isMobileAddressCardOpen.value ? 'auto' : 'hidden'
 }
-const openAddAddress = () => {
-    emit('openAddAddress')
-}
-const removeAddress = (index) => {
-    selectAddress.value = selectAddress.value.filter(address => selectAddress.value[index] !== address)
-}
 
 onMounted(() => {
     window.addEventListener('scroll', handleScroll)
     window.addEventListener('resize', handleWindowResize)
-    selectAddress.value.forEach(address => {
+    addresses.value.forEach(address => {
         if(address.isSelected) {
             selectedAddress.value = address.value
         }

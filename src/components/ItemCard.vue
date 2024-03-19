@@ -37,6 +37,7 @@
 
 <script setup>
 import {ref} from "vue";
+import BackTo from "./BackTo.vue";
 
 const rating = ref(3)
 const isFavorite = ref(false)
