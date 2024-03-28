@@ -1,5 +1,6 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import HomePage from '../pages/HomePage.vue'
+import NProgress from 'nprogress'
 
 const router = createRouter({
     history: createWebHistory(),
@@ -35,7 +36,7 @@ const router = createRouter({
             component: () => import('../pages/ItemInfoPage.vue')
         },
         {
-            path: '/catalog/:category',
+            path: '/catalog/:categoryId',
             name: 'catalog',
             component: () => import('../pages/CatalogPage.vue'),
             props: true
@@ -44,8 +45,23 @@ const router = createRouter({
             path: '/shopping-mall/:mallId',
             name: 'mall',
             component: () => import('../pages/ShoppingMallPage.vue'),
+        },
+        {
+            path: '/:catchAll(.*)',
+            component: () => import('../pages/NotFoundPage.vue')
         }
     ]
 })
 
+NProgress.configure({ easing: 'ease', speed: 1000, showSpinner: false, trickle: false })
+
+router.beforeEach(() => {
+    NProgress.start()
+})
+
+router.afterEach(() => {
+    NProgress.done()
+})
+
 export default router
+

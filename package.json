@@ -11,6 +11,9 @@
   "dependencies": {
     "@vueuse/components": "^10.7.2",
     "@vueuse/core": "^10.7.2",
+    "embla-carousel-autoplay": "^8.0.0",
+    "embla-carousel-vue": "^8.0.0",
+    "nprogress": "^0.2.0",
     "pinia": "^2.1.7",
     "primeicons": "^6.0.1",
     "vue": "^3.3.11",
