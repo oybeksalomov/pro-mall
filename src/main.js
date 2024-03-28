@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import './style.css'
 import {createPinia} from "pinia";
+import './NProgress.css'
 
 import router from './router'
 import App from './App.vue'

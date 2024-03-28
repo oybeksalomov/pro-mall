@@ -6,23 +6,23 @@
 
     <!--start carousel-->
     <section class="mt-8">
-        <div class="lg:container">
-            <div class="relative">
-                <div ref="carouselRef" class="flex snap-mandatory snap-x aspect-[12/7] lg:aspect-auto lg:rounded-[2.5rem] lg:gap-8 flex-nowrap carouselScrollbar overflow-hidden">
+        <div class="lg:container relative">
+            <div class="overflow-hidden lg:rounded-[2.5rem]" ref="emblaRef">
+                <div class="flex aspect-[4/2] lg:aspect-auto">
                     <div
                         v-for="(carouselItem, index) in carouselItems"
                         :key="index"
-                        class="w-full xl:w-[105rem] lg:h-[31rem] flex-none snap-start"
+                        class="w-full xl:w-[100rem] lg:mr-8 lg:h-[31rem] flex-none snap-start"
                     >
                         <a href="#" class="w-full h-full relative">
                             <img :src="carouselItem.image" alt="Carousel Image" class="w-full h-full object-cover lg:rounded-[2.5rem] bg-gray_lightest">
                         </a>
                     </div>
                 </div>
-                <button @click="moveCarousel('right')" class="rounded-full flex bg-white absolute top-1/2 -translate-y-[50%] right-4 lg:-right-[1.9rem] shadow-md items-center justify-center w-[3.9rem] h-[3.9rem]">
+                <button @click="scrollNext" class="rounded-full hidden lg:flex bg-white absolute top-1/2 -translate-y-[50%] right-6 shadow-md items-center justify-center w-[3.9rem] h-[3.9rem]">
                     <i class="pi pi-chevron-right text-lg text-main_color"></i>
                 </button>
-                <button @click="moveCarousel('left')" class="rounded-full flex bg-white absolute top-1/2 -translate-y-[50%] left-4 lg:-left-[1.9rem] shadow-md items-center justify-center w-[3.9rem] h-[3.9rem]">
+                <button @click="scrollPrev" class="rounded-full hidden lg:flex bg-white absolute top-1/2 -translate-y-[50%] left-6 shadow-md items-center justify-center w-[3.9rem] h-[3.9rem]">
                     <i class="pi pi-chevron-left text-lg text-main_color"></i>
                 </button>
             </div>
@@ -169,19 +169,21 @@ import AddAddress from "../components/AddAddress.vue";
 import SubscribeRow from "../components/SubscribeRow.vue";
 import {useAddressStore} from "../store/address.js";
 import {storeToRefs} from "pinia";
+import emblaCarouselVue from "embla-carousel-vue";
+import Autoplay from "embla-carousel-autoplay";
 
 const addressStore = useAddressStore()
 const {addresses, isAddAddressOpen} = storeToRefs(addressStore)
 
 const carouselRef = ref(null)
 const saleCardsRef = ref(null)
-const carouselBannerItems = ref([
+
+const carouselItems = ref([
     {id: 1, image: carouselImage1},
     {id: 2, image: carouselImage2},
     {id: 3, image: carouselImage3},
     {id: 4, image: carouselImage2},
-])
-const carouselItems = ref([]);
+]);
 const shoppingMalls = ref([
     {name: 'Samarqand Darvoza', address: '5a улица Самарканд Дарвоза, Ташкент', image: mallImage1, distance: '2.5 км'},
     {name: 'Mega Planet', address: '15 улица Самарканд Дарвоза, Ташкент', image: mallImage2, distance: '3 км'},
@@ -229,34 +231,13 @@ const brands = ref([
     {img: brandImg3, url: '#'},
     {img: brandImg4, url: '#'},
 ])
+const [emblaRef, emblaApi] = emblaCarouselVue({loop: true, align: "start", }, [Autoplay()])
 
-const moveCarousel = (direction) => {
-    if(carouselRef.value) {
-        const carouselItemWidth = carouselRef.value.children[0].offsetWidth + (screen.width < 1024 ? 0 : 20)
-        const scrollLeft = carouselRef.value.scrollLeft
-        const scrollWidth = carouselRef.value.scrollWidth
-        const timeOut = screen.width < 1024 ? 500 : 700
-        const newIndex = direction === 'left' ? scrollLeft - carouselItemWidth : scrollLeft + carouselItemWidth;
-
-        carouselRef.value.scrollTo({
-            left: newIndex,
-            behavior: 'smooth',
-        });
-
-        if(scrollLeft > scrollWidth * 0.7) {
-            setTimeout(() => {
-                carouselRef.value.scrollTo({
-                    left: scrollWidth / 2
-                })
-            }, timeOut)
-        } else if(scrollLeft < scrollWidth * 0.3) {
-            setTimeout(() => {
-                carouselRef.value.scrollTo({
-                    left: scrollWidth / 2
-                })
-            }, timeOut)
-        }
-    }
+const scrollPrev = () => {
+    if (emblaApi) emblaApi.value.scrollPrev()
+}
+const scrollNext = () => {
+    if (emblaApi) emblaApi.value.scrollNext()
 }
 
 const moveSaleCards = (direction) => {
@@ -277,21 +258,9 @@ const toggleAddAddress = () => {
     document.body.style.overflow = isAddAddressOpen ? 'hidden' : 'auto'
 }
 
-onBeforeMount(() => {
-    carouselItems.value = [...carouselBannerItems.value, ...carouselBannerItems.value, ...carouselBannerItems.value]
-})
-onMounted(() => {
-    carouselRef.value.scrollTo({
-        left: carouselRef.value.scrollWidth / 2
-    })
-    setInterval(() => {
-        moveCarousel('right')
-    }, 3000)
-})
 </script>
 
 <style scoped>
-.carouselScrollbar,
 .saleCardsScrollbar {
     scrollbar-width: none;
 }
